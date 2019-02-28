@@ -1,14 +1,33 @@
-const Koa = require('koa')
+import { resolve } from 'path'
+import Koa from 'koa'
+import R from 'ramda'
+import { connect, initSchema } from './database/init'
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
-
-const app = new Koa()
-
-// Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
-config.dev = !(app.env === 'production')
+
+const MIDDLEWARES = ['router']
+
+const useMiddlewares = app => {
+  R.map(
+    R.compose(
+      R.forEachObjIndexed(e => e(app)),
+      require,
+      name => resolve(__dirname, `./middleware/${name}`)
+    )
+  )(MIDDLEWARES)
+}
 
 async function start() {
+  await connect()
+  initSchema()
+
+  const app = new Koa()
+
+  config.dev = !(app.env === 'production')
+
+  await useMiddlewares(app)
+
   // Instantiate nuxt.js
   const nuxt = new Nuxt(config)
 
