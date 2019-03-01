@@ -33,6 +33,14 @@ const MovieSchema = new Schema({
   posterKey: String,
   pictureKeys: Array,
 
+  casts: [
+    {
+      name: String,
+      avatar: String,
+      avatarKey: String
+    }
+  ],
+
   meta: {
     createdAt: {
       type: Date,
@@ -45,7 +53,7 @@ const MovieSchema = new Schema({
   }
 })
 
-MovieSchema.pre('save', function (next) {
+MovieSchema.pre('save', function(next) {
   if (this.isNew) {
     this.meta.createdAt = this.meta.updatedAt = Date.now()
   } else {

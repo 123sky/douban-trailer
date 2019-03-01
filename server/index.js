@@ -22,6 +22,15 @@ async function start() {
   await connect()
   initSchema()
 
+  // 执行获取movie的子进程
+  // require('./task/movie')
+
+  // 执行获取movie详情的子进程
+  // require('./task/detail')
+
+  // 执行获取movie预告片的子进程
+  // require('./task/video')
+
   const app = new Koa()
 
   config.dev = !(app.env === 'production')

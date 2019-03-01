@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const Movie = mongoose.model('Movie')
 
 export const getAllMovies = async (type, year) => {
-  let query = {}
+  const query = {}
 
   if (type) {
     query.movieTypes = { $in: [type] }
@@ -13,11 +13,13 @@ export const getAllMovies = async (type, year) => {
   }
 
   const movies = await Movie.find(query)
+    .populate('category')
+    .populate('videos')
 
   return movies
 }
 
-export const getRelativeMovies = async (movie) => {
+export const getRelativeMovies = async movie => {
   const relativeMovies = await Movie.find({
     movieTypes: { $in: movie.movieTypes }
   })
@@ -25,7 +27,7 @@ export const getRelativeMovies = async (movie) => {
   return relativeMovies
 }
 
-export const getSingleMovie = async (id) => {
+export const getSingleMovie = async id => {
   const movie = await Movie.findOne({ _id: id })
 
   return movie

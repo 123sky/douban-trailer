@@ -1,10 +1,14 @@
 import { Controller, Get } from '../decorator/router'
-import { getAllMovies, getSingleMovie, getRelativeMovies } from '../service/movie'
+import {
+  getAllMovies,
+  getSingleMovie,
+  getRelativeMovies
+} from '../service/movie'
 
 @Controller('/movies')
 class MovieRouter {
   @Get('/all')
-  async getMovieList (ctx, next) {
+  async getMovieList(ctx, next) {
     const type = ctx.query.type
     const year = ctx.query.year
     const movies = await getAllMovies(type, year)
@@ -16,7 +20,7 @@ class MovieRouter {
   }
 
   @Get('/detail/:id')
-  async getMovieDetail (ctx, next) {
+  async getMovieDetail(ctx, next) {
     const id = ctx.params.id
     const movie = await getSingleMovie(id)
     const relativeMovies = await getRelativeMovies(movie)

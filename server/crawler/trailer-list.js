@@ -2,10 +2,10 @@ const puppeteer = require('puppeteer')
 
 const url = `https://movie.douban.com/cinema/nowplaying/hangzhou/`
 
-const sleep = time => new Promise(resolve => {
-  setTimeout(resolve, time)
-})
-
+const sleep = time =>
+  new Promise(resolve => {
+    setTimeout(resolve, time)
+  })
 ;(async () => {
   const browser = await puppeteer.launch({
     args: ['--no-sandbox'],
@@ -30,16 +30,19 @@ const sleep = time => new Promise(resolve => {
 
   // 遍历dom， 获取数据
   const result = await page.evaluate(() => {
-    var $ = window.$
-    var items = Array.from($('#nowplaying').find('.list-item'))
-    var links = []
+    const $ = window.$
+    const items = Array.from($('#nowplaying').find('.list-item'))
+    const links = []
 
     items.forEach(item => {
-      let it = $(item)
-      let doubanId = it[0].id
-      let title = it.data('title')
-      let rate = Number(it.data('score'))
-      let poster = it.find('img').attr('src').replace('s_ratio', 'l_ratio')
+      const it = $(item)
+      const doubanId = it[0].id
+      const title = it.data('title')
+      const rate = Number(it.data('score'))
+      const poster = it
+        .find('img')
+        .attr('src')
+        .replace('s_ratio', 'l_ratio')
       links.push({
         doubanId,
         title,

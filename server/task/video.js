@@ -1,20 +1,20 @@
-const nanoid = require('nanoid')
 const cp = require('child_process')
 const { resolve } = require('path')
+const nanoid = require('nanoid')
 const { model } = require('mongoose')
 const upload = require('../lib/upload')
 
 const Movie = model('Movie')
 const Video = model('Video')
 
-async function saveVideos (movie, videos) {
-  let videoKeys = []
+async function saveVideos(movie, videos) {
+  const videoKeys = []
   for (let index = 0; index < videos.length; index++) {
     try {
-      let params = videos[index]
+      const params = videos[index]
 
       try {
-        let videoRes = await upload(params.video, nanoid() + '.mp4')
+        const videoRes = await upload(params.video, nanoid() + '.mp4')
         if (videoRes.key) {
           params.videoKey = videoRes.key
         } else {
@@ -25,7 +25,7 @@ async function saveVideos (movie, videos) {
       }
 
       try {
-        let coverRes = await upload(params.cover, nanoid() + '.jpg')
+        const coverRes = await upload(params.cover, nanoid() + '.jpg')
         if (coverRes.key) {
           params.coverKey = coverRes.key
         } else {
@@ -36,8 +36,8 @@ async function saveVideos (movie, videos) {
       }
 
       params.movie = movie._id
-      let video = new Video(params)
-      let res = await video.save()
+      const video = new Video(params)
+      const res = await video.save()
       videoKeys.push(res._id)
     } catch (error) {
       console.error('save video err', error)
@@ -46,12 +46,12 @@ async function saveVideos (movie, videos) {
   return videoKeys
 }
 
-async function uploadPictures (pictures) {
-  let pictureKeys = []
+async function uploadPictures(pictures) {
+  const pictureKeys = []
   for (let index = 0; index < pictures.length; index++) {
     const picture = pictures[index]
     try {
-      let pictureRes = await upload(picture, nanoid() + '.jpg')
+      const pictureRes = await upload(picture, nanoid() + '.jpg')
       if (pictureRes.key) {
         pictureKeys.push(pictureRes.key)
       }
@@ -67,7 +67,7 @@ async function uploadPictures (pictures) {
   const child = cp.fork(script, [])
   let invoked = false
 
-  let movies = await Movie.find({
+  const movies = await Movie.find({
     pictures: []
   })
 
@@ -81,17 +81,20 @@ async function uploadPictures (pictures) {
     if (invoked) return
     invoked = false
     if (code !== 0) {
-      console.log('movie child process exit err: ', new Error('exit code' + code))
+      console.log(
+        'movie child process exit err: ',
+        new Error('exit code' + code)
+      )
     } else {
       console.log('movie child process exit code: ' + code)
     }
   })
 
   child.on('message', async ({ movie, videos, pictures }) => {
-    let videoKeys = await saveVideos(movie, videos)
-    let pictureKeys = await uploadPictures(pictures)
+    const videoKeys = await saveVideos(movie, videos)
+    const pictureKeys = await uploadPictures(pictures)
 
-    let movieModel = await Movie.findOne({ _id: movie._id })
+    const movieModel = await Movie.findOne({ _id: movie._id })
     movieModel.videos = videoKeys
     movieModel.pictures = pictures
     movieModel.pictureKeys = pictureKeys
