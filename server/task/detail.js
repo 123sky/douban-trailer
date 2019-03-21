@@ -17,67 +17,59 @@ async function fetchMovie(item) {
   return body
 }
 
-;(async () => {
+export default async function() {
   const movies = await Movie.find({
-    $or: [
-      { summary: { $exists: false } },
-      { summary: null },
-      { summary: '' },
-      { year: { $exists: false } },
-      { title: '' },
-      { casts: { $exists: false } }
-    ]
+    $or: [{ summary: { $exists: false } }, { summary: null }, { summary: '' }]
   })
 
   for (let index = 0; index < movies.length; index++) {
     const movie = movies[index]
     const movieData = await fetchMovie(movie)
-    if (movieData) {
-      movie.summary = movieData.summary || ''
-      movie.year = movieData.year || null
-      movie.countries = movieData.countries || []
+    if (!movieData) return
 
-      for (let index = 0; index < movieData.genres.length; index++) {
-        const item = movieData.genres[index]
+    movie.summary = movieData.summary || ''
+    movie.year = movieData.year || null
+    movie.countries = movieData.countries || []
 
-        let cat = await Category.findOne({ name: item })
+    for (let index = 0; index < movieData.genres.length; index++) {
+      const item = movieData.genres[index]
 
-        if (!cat) {
-          cat = new Category({
-            name: item,
-            movies: [movie._id]
-          })
-          await cat.save()
-        } else if (!cat.movies.includes(movie._id)) {
-          cat.movies.push(movie._id)
-        }
-
-        if (!movie.category.includes(cat._id)) {
-          movie.category.push(cat._id)
-        }
+      let cat = await Category.findOne({ name: item })
+      if (!cat) {
+        cat = new Category({
+          name: item,
+          movies: [movie._id]
+        })
+        await cat.save()
+      } else if (!cat.movies.includes(movie._id)) {
+        cat.movies.push(movie._id)
       }
 
-      for (let index = 0; index < movieData.casts.length; index++) {
-        const cast = movieData.casts[index]
-        const newCast = {
-          name: cast.name,
-          avatar: cast.avatars.large
-        }
-
-        try {
-          const res = await upload(cast.avatars.large, nanoid() + '.jpg')
-          if (res.key) {
-            newCast.avatarKey = res.key
-          } else {
-            console.log('error avatar upload res no key', res)
-          }
-        } catch (error) {
-          console.log('error upload avatar', error)
-        }
-        movie.casts.push(newCast)
+      if (!movie.category.includes(cat._id)) {
+        movie.category.push(cat._id)
       }
-
-      await movie.save()
     }
+
+    for (let index = 0; index < movieData.casts.length; index++) {
+      const cast = movieData.casts[index]
+      const newCast = {
+        name: cast.name,
+        avatar: cast.avatars.large
+      }
+
+      try {
+        const res = await upload(cast.avatars.large, nanoid() + '.jpg')
+        if (res.key) {
+          newCast.avatarKey = res.key
+        } else {
+          console.log('error avatar upload res no key', res)
+        }
+      } catch (error) {
+        console.log('error upload avatar', error)
+      }
+      movie.casts.push(newCast)
+    }
+
+    await movie.save()
   }
-})()
+}

@@ -1,8 +1,11 @@
+const { resolve } = require('path')
 const mongoose = require('mongoose')
 const glob = require('glob')
-const { resolve } = require('path')
 
-const db = 'mongodb://localhost/doubanTrailer'
+const db =
+  process.env.NODE_ENV === 'production'
+    ? 'mongodb://trailer_db/doubanTrailer'
+    : 'mongodb://localhost/doubanTrailer'
 const MAXCONNECTTIMES = 5
 
 mongoose.Promise = global.Promise
@@ -43,7 +46,7 @@ exports.connect = () => {
       }
     })
 
-    mongoose.connection.on('open', async () => {
+    mongoose.connection.on('open', () => {
       resolve()
       console.log('MongoDB Connected Successfully!')
     })

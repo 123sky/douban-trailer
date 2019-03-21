@@ -20,16 +20,8 @@ const useMiddlewares = app => {
 
 async function start() {
   await connect()
+
   initSchema()
-
-  // 执行获取movie的子进程
-  // require('./task/movie')
-
-  // 执行获取movie详情的子进程
-  // require('./task/detail')
-
-  // 执行获取movie预告片的子进程
-  // require('./task/video')
 
   const app = new Koa()
 
@@ -37,7 +29,6 @@ async function start() {
 
   await useMiddlewares(app)
 
-  // Instantiate nuxt.js
   const nuxt = new Nuxt(config)
 
   const {
@@ -45,7 +36,6 @@ async function start() {
     port = process.env.PORT || 3000
   } = nuxt.options.server
 
-  // Build in development
   if (config.dev) {
     const builder = new Builder(nuxt)
     await builder.build()
@@ -61,6 +51,7 @@ async function start() {
   })
 
   app.listen(port, host)
+
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
     badge: true

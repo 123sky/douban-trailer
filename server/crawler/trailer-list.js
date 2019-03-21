@@ -39,15 +39,14 @@ const sleep = time =>
       const doubanId = it[0].id
       const title = it.data('title')
       const rate = Number(it.data('score'))
-      const poster = it
-        .find('img')
-        .attr('src')
-        .replace('s_ratio', 'l_ratio')
+      const poster = it.find('img').attr('src')
+      const posterThumbnail = poster.replace('s_ratio', 'l_ratio')
       links.push({
         doubanId,
         title,
         rate,
-        poster
+        poster,
+        posterThumbnail
       })
     })
     return links
@@ -55,7 +54,8 @@ const sleep = time =>
 
   await browser.close()
 
-  console.log(result)
-  process.send({ result })
+  process.send({
+    result
+  })
   process.exit(0)
 })()

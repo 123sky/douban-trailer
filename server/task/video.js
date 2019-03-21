@@ -1,5 +1,5 @@
 const cp = require('child_process')
-const { resolve } = require('path')
+const path = require('path')
 const nanoid = require('nanoid')
 const { model } = require('mongoose')
 const upload = require('../lib/upload')
@@ -62,44 +62,50 @@ async function uploadPictures(pictures) {
   return pictureKeys
 }
 
-;(async () => {
-  const script = resolve(__dirname, '../crawler/video.js')
-  const child = cp.fork(script, [])
-  let invoked = false
+export default function() {
+  return new Promise(async (resolve, reject) => {
+    const script = path.resolve(__dirname, '../crawler/video.js')
+    const child = cp.fork(script, [])
+    let invoked = false
 
-  const movies = await Movie.find({
-    pictures: []
+    const movies = await Movie.find({
+      pictures: []
+    })
+
+    child.on('error', err => {
+      if (invoked) return
+      invoked = true
+      console.log('movie child process err: ', err)
+      reject(err)
+    })
+
+    child.on('exit', code => {
+      if (invoked) return
+      invoked = false
+      if (code !== 0) {
+        console.log(
+          'movie child process exit err: ',
+          new Error('exit code' + code)
+        )
+        reject(new Error('exit code' + code))
+      } else {
+        console.log('movie child process exit code: ' + code)
+      }
+    })
+
+    child.on('message', async ({ movie, videos, pictures }) => {
+      const videoKeys = await saveVideos(movie, videos)
+      const pictureKeys = await uploadPictures(pictures)
+
+      const movieModel = await Movie.findOne({ _id: movie._id })
+      movieModel.videos = videoKeys
+      movieModel.pictures = pictures
+      movieModel.pictureKeys = pictureKeys
+      await movieModel.save()
+
+      resolve()
+    })
+
+    child.send(movies)
   })
-
-  child.on('error', err => {
-    if (invoked) return
-    invoked = true
-    console.log('movie child process err: ', err)
-  })
-
-  child.on('exit', code => {
-    if (invoked) return
-    invoked = false
-    if (code !== 0) {
-      console.log(
-        'movie child process exit err: ',
-        new Error('exit code' + code)
-      )
-    } else {
-      console.log('movie child process exit code: ' + code)
-    }
-  })
-
-  child.on('message', async ({ movie, videos, pictures }) => {
-    const videoKeys = await saveVideos(movie, videos)
-    const pictureKeys = await uploadPictures(pictures)
-
-    const movieModel = await Movie.findOne({ _id: movie._id })
-    movieModel.videos = videoKeys
-    movieModel.pictures = pictures
-    movieModel.pictureKeys = pictureKeys
-    await movieModel.save()
-  })
-
-  child.send(movies)
-})()
+}

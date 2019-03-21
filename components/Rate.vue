@@ -1,13 +1,24 @@
 <template>
   <div class="rate">
-    <div id="star-five" />
+    <ul class="stars">
+      <li
+        v-for="item in 5"
+        :key="item"
+      >
+        <i
+          class="iconfont icon-pingfen" 
+          :style="{color: item <= Math.ceil(data/2) ? '#febd36' : '#ccc'}"
+        />
+      </li>
+    </ul>
+    <span>{{ data }}</span>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    rate: {
+    data: {
       type: Number,
       default: 0
     }
@@ -17,45 +28,23 @@ export default {
 
 <style lang="scss" scoped>
 .rate {
-  // transform: scale(0.12);
-}
-#star-five {
-  margin: 50px 0;
-  position: relative;
-  display: block;
-  color: red;
-  width: 0px;
-  height: 0px;
-  border-right: 100px solid transparent;
-  border-bottom: 70px solid red;
-  border-left: 100px solid transparent;
-  transform: rotate(35deg);
-}
-#star-five:before {
-  border-bottom: 80px solid red;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
-  position: absolute;
-  height: 0;
-  width: 0;
-  top: -45px;
-  left: -65px;
-  display: block;
-  content: '';
-  transform: rotate(-35deg);
-}
-#star-five:after {
-  position: absolute;
-  display: block;
-  color: red;
-  top: 3px;
-  left: -105px;
-  width: 0px;
-  height: 0px;
-  border-right: 100px solid transparent;
-  border-bottom: 70px solid red;
-  border-left: 100px solid transparent;
-  transform: rotate(-70deg);
-  content: '';
+  line-height: 16px;
+  .stars {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+    margin-right: 10px;
+    li {
+      margin-right: 10px;
+      display: inline-block;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+  span {
+    vertical-align: top;
+  }
 }
 </style>
