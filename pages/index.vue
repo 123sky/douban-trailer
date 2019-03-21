@@ -3,6 +3,7 @@
     <div class="header">
       <i class="iconfont icon-yonghu" />
       <i class="iconfont icon-liebiao" />
+      <i class="iconfont icon-gengxinzhuanhuan" @click="update" />
     </div>
     <full-page v-model="currentIndex" :data="data">
       <template slot-scope="{data: item}">
@@ -48,6 +49,7 @@ export default {
 .main {
   position: relative;
   .header {
+    height: 25px;
     position: absolute;
     right: 80px;
     top: 45px;

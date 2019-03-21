@@ -7,7 +7,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: pkg.name,
+    title: '电影头条',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -17,7 +17,7 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       {
         rel: 'stylesheet',
-        href: 'http://at.alicdn.com/t/font_1100902_mc709iqgs1s.css'
+        href: 'http://at.alicdn.com/t/font_1100902_3r3kdhinmud.css'
       }
     ]
   },
