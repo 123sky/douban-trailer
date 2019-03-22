@@ -1,7 +1,7 @@
-import { Route } from '../decorator/router'
 import { resolve } from 'path'
+import { Route } from '../decorator/router'
 
-export const router = (app) => {
+export const router = app => {
   const routesPath = resolve(__dirname, '../routes')
   const instance = new Route(app, routesPath)
 

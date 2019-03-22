@@ -1,6 +1,6 @@
 FROM node
 ENV NODE_ENV=production
-ENV HOST 0.0.0.0
+ENV HOST 149.248.34.161
 COPY . /douban-trailer
 WORKDIR /douban-trailer
 #If the environment in China build please open the following comments
