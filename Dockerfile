@@ -1,11 +1,23 @@
-FROM node
-ENV NODE_ENV=production
-ENV HOST 149.248.34.161
-COPY . /douban-trailer
-WORKDIR /douban-trailer
-#If the environment in China build please open the following comments
-#RUN npm config set registry https://registry.npm.taobao.org
-RUN npm install yarn -g
-RUN yarn
-RUN yarn run build
-CMD ["yarn", "start"]
+FROM node:10.12.0-alpine
+
+ENV APP_PATH /douban-trailer
+ENV APP_PORT 3000
+ENV DEBUGGER_PORT 9229
+
+# Create app directory
+WORKDIR $APP_PATH
+
+# Install app dependencies efficiently
+# http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/
+COPY package.json /tmp/
+COPY yarn.lock /tmp/
+RUN cd /tmp && yarn
+RUN mv /tmp/node_modules $APP_PATH/node_modules
+
+# Bundle app source
+COPY . $APP_PATH
+
+EXPOSE $APP_PORT
+EXPOSE $DEBUGGER_PORT
+
+CMD [ "yarn", "start" ]

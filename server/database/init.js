@@ -4,7 +4,7 @@ const glob = require('glob')
 
 const db =
   process.env.NODE_ENV === 'production'
-    ? 'mongodb://trailer_db/doubanTrailer'
+    ? 'mongodb://db/doubanTrailer'
     : 'mongodb://localhost/doubanTrailer'
 const MAXCONNECTTIMES = 5
 

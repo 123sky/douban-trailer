@@ -1,19 +1,30 @@
-version: "3"
+volumes:
+  ? node_modules
 services:
-  trailer_service:
-    build: .
+  web:
+    image: douban-trailer/web
     links: 
-      - trailer_db
-    hostname: trailer_service_in_container
-    volumes:
-      - ./:/douban-trailer
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
+      - db
+    build:
+      context: .
+    command: 'yarn start'
     ports:
-      - "3000:3000"
-  trailer_db:
+      - '3000:3000'
+      # - '9229:9229'
+  dev:
+    image: douban-trailer/dev
+    links: 
+      - db
+    build:
+      context: .
+    # command: 'npm run dev'
+    volumes:
+      - .:/douban-trailer
+      - node_modules:/douban-trailer/node_modules
+    ports:
+      - '3000:3000'
+      - '9229:9229'
+  db:
     image: mongo
     volumes:
       - "/data/db:/data/db"
