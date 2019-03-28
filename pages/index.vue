@@ -6,7 +6,7 @@
       <i class="iconfont icon-gengxinzhuanhuan" @click="update" />
     </div>
     <full-page v-model="currentIndex" :data="data">
-      <template slot-scope="{data: item}">
+      <template slot-scope="{ data: item }">
         <movie :data="item" />
       </template>
     </full-page>

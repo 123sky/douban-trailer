@@ -1,6 +1,4 @@
-const { resolve } = require('path')
-const mongoose = require('mongoose')
-const glob = require('glob')
+import mongoose from'mongoose'
 
 const db =
   process.env.NODE_ENV === 'production'
@@ -15,11 +13,7 @@ mongoose.set('useNewUrlParser', true)
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
 
-exports.initSchema = () => {
-  glob.sync(resolve(__dirname, './schema', '**/*.js')).forEach(require)
-}
-
-exports.connect = () => {
+export const connect = () => {
   let connectTimes = 0
 
   return new Promise((resolve, reject) => {

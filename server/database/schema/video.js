@@ -1,8 +1,7 @@
-const { Schema, model } = require('mongoose')
+import { Schema, model } from 'mongoose'
 const { ObjectId } = Schema.Types
 
 const VideoSchema = new Schema({
-
   movie: {
     type: ObjectId,
     ref: 'Movie'
@@ -25,7 +24,7 @@ const VideoSchema = new Schema({
   }
 })
 
-VideoSchema.pre('save', function (next) {
+VideoSchema.pre('save', function(next) {
   if (this.isNew) {
     this.meta.createdAt = this.meta.updatedAt = Date.now()
   } else {
@@ -34,4 +33,4 @@ VideoSchema.pre('save', function (next) {
   next()
 })
 
-model('Video', VideoSchema)
+export default model('Video', VideoSchema)

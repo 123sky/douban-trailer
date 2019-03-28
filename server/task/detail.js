@@ -1,9 +1,7 @@
-const rp = require('request-promise-native')
-const { model } = require('mongoose')
-const Movie = model('Movie')
-const Category = model('Category')
-const nanoid = require('nanoid')
-const upload = require('../lib/upload')
+import rp from 'request-promise-native'
+import nanoid from 'nanoid'
+import { Category, Movie } from '../database/schema'
+import upload from '../lib/upload'
 
 async function fetchMovie(item) {
   const url = `http://api.douban.com/v2/movie/subject/${item.doubanId}`

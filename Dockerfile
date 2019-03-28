@@ -1,5 +1,6 @@
-FROM node:10.12.0-alpine
+FROM node:10.12.0
 
+ENV NODE_ENV=production
 ENV APP_PATH /douban-trailer
 ENV APP_PORT 3000
 ENV DEBUGGER_PORT 9229

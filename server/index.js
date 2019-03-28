@@ -1,38 +1,26 @@
-import { resolve } from 'path'
 import Koa from 'koa'
-import R from 'ramda'
-import { connect, initSchema } from './database/init'
-const consola = require('consola')
-const { Nuxt, Builder } = require('nuxt')
-const config = require('../nuxt.config.js')
+import consola from 'consola'
+import { Nuxt, Builder } from 'nuxt'
+import config from '../nuxt.config.js'
+import { Route } from './decorator/router'
+import { connect } from './database/init'
 
-const MIDDLEWARES = ['router']
+const appLogger = consola.withScope(`APP`)
 
-const useMiddlewares = app => {
-  R.map(
-    R.compose(
-      R.forEachObjIndexed(e => e(app)),
-      require,
-      name => resolve(__dirname, `./middleware/${name}`)
-    )
-  )(MIDDLEWARES)
-}
-
-async function start() {
+;(async () => {
   await connect()
-
-  initSchema()
 
   const app = new Koa()
 
   config.dev = !(app.env === 'production')
 
-  await useMiddlewares(app)
+  const instance = new Route(app)
+  await instance.init()
 
   const nuxt = new Nuxt(config)
 
   const {
-    host = process.env.HOST || '127.0.0.1',
+    host = process.env.HOST || '0.0.0.0',
     port = process.env.PORT || 3000
   } = nuxt.options.server
 
@@ -50,12 +38,10 @@ async function start() {
     nuxt.render(ctx.req, ctx.res)
   })
 
-  app.listen(port, host)
-
-  consola.ready({
-    message: `Server listening on http://${host}:${port}`,
-    badge: true
+  app.listen(port, host, function koaInitEnd() {
+    appLogger.start(
+      `server is listening at ${host}:${port}`,
+      `on mode ${app.env}`
+    )
   })
-}
-
-start()
+})()

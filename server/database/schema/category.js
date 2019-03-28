@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose')
+import { Schema, model } from 'mongoose'
 const ObjectId = Schema.Types.ObjectId
 
 const CategorySchema = new Schema({
@@ -25,7 +25,7 @@ const CategorySchema = new Schema({
   }
 })
 
-CategorySchema.pre('save', function (next) {
+CategorySchema.pre('save', function(next) {
   if (this.isNew) {
     this.meta.createdAt = this.meta.updatedAt = Date.now()
   } else {
@@ -34,4 +34,4 @@ CategorySchema.pre('save', function (next) {
   next()
 })
 
-model('Category', CategorySchema)
+export default model('Category', CategorySchema)

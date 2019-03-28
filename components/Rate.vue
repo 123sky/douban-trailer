@@ -1,13 +1,10 @@
 <template>
   <div class="rate">
     <ul class="stars">
-      <li
-        v-for="item in 5"
-        :key="item"
-      >
+      <li v-for="item in 5" :key="item">
         <i
-          class="iconfont icon-pingfen" 
-          :style="{color: item <= Math.ceil(data/2) ? '#febd36' : '#ccc'}"
+          class="iconfont icon-pingfen"
+          :style="{ color: item <= Math.ceil(data / 2) ? '#febd36' : '#ccc' }"
         />
       </li>
     </ul>

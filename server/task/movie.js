@@ -1,10 +1,8 @@
-const cp = require('child_process')
-const path = require('path')
-const { model } = require('mongoose')
-const nanoid = require('nanoid')
-const upload = require('../lib/upload')
-
-const Movie = model('Movie')
+import cp from 'child_process'
+import path from 'path'
+import nanoid from 'nanoid'
+import { Movie } from '../database/schema'
+import upload from '../lib/upload'
 
 export default function() {
   return new Promise((resolve, reject) => {

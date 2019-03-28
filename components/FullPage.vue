@@ -8,11 +8,8 @@
         <i class="iconfont icon-up" />
       </div>
     </div>
-    
-    <div
-      class="full-page"
-      :style="style"
-    >
+
+    <div class="full-page" :style="style">
       <div
         v-for="(item, index) in data"
         :key="item._id"
@@ -79,7 +76,6 @@ export default {
   }
 }
 </script>
-
 
 <style lang="scss" scoped>
 .full-page-wrap {

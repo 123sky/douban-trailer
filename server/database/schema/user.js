@@ -3,8 +3,8 @@
  * https://www.mongodb.com/blog/search/bcrypt
  */
 
-const { Schema, model } = require('mongoose')
-const bcrypt = require('bcrypt')
+import { Schema, model } from 'mongoose'
+import bcrypt from 'bcrypt'
 
 const SALT_WORK_FACTOR = 10 // 密码加密权重值。越大越复杂，但会影响性能能。
 const MAX_LOGIN_ATTEMPTS = 5 // 最大错误次数
@@ -47,7 +47,7 @@ UserSchema.virtual('isLocked').get(() => {
   return !!(this.lockUntil && this.lockUntil > Date.now())
 })
 
-UserSchema.pre('save', function (next) {
+UserSchema.pre('save', function(next) {
   if (this.isNew) {
     this.meta.createdAt = this.meta.updatedAt = Date.now()
   } else {
@@ -57,7 +57,7 @@ UserSchema.pre('save', function (next) {
 })
 
 // 密码加密
-UserSchema.pre('save', function (next) {
+UserSchema.pre('save', function(next) {
   if (!this.isModified('password')) return next
   bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
     if (err) return next(err)
@@ -71,7 +71,7 @@ UserSchema.pre('save', function (next) {
 
 // 密码是否正确
 UserSchema.methods = {
-  comparePassword: function (_password, password) {
+  comparePassword: function(_password, password) {
     return new Promise((resolve, reject) => {
       bcrypt.compare(_password, password, (err, isMatch) => {
         if (!err) resolve(isMatch)
@@ -81,24 +81,26 @@ UserSchema.methods = {
   },
 
   // 超过登录次数限制后将锁定登陆
-  incLoginAttempts: function (user) {
+  incLoginAttempts: function(user) {
     return new Promise((resolve, reject) => {
       if (this.lockUntil && this.lockUntil < Date.now()) {
         // 锁定但已超过锁定时间限制
-        this.update({
-          $set: {
-            loginAttempts: 1
+        this.update(
+          {
+            $set: {
+              loginAttempts: 1
+            },
+            $unset: {
+              lockUntil: 1
+            }
           },
-          $unset: {
-            lockUntil: 1
+          err => {
+            if (!err) resolve(true)
+            reject(err)
           }
-        },
-        (err) => {
-          if (!err) resolve(true)
-          reject(err)
-        })
+        )
       } else {
-        let updates = {
+        const updates = {
           $inc: {
             loaginAttempts: 1
           }
@@ -117,4 +119,4 @@ UserSchema.methods = {
   }
 }
 
-model('User', UserSchema)
+export default model('User', UserSchema)

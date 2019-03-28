@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose')
+import { Schema, model } from 'mongoose'
 const { ObjectId } = Schema.Types
 
 const MovieSchema = new Schema({
@@ -62,4 +62,4 @@ MovieSchema.pre('save', function(next) {
   next()
 })
 
-model('Movie', MovieSchema)
+export default model('Movie', MovieSchema)

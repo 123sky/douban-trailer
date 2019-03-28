@@ -1,6 +1,4 @@
-import mongoose from 'mongoose'
-
-const Movie = mongoose.model('Movie')
+import { Movie } from '../database/schema'
 
 export const getAllMovies = async (type, year) => {
   const query = {}

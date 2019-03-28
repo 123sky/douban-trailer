@@ -1,8 +1,15 @@
 {
-  "presets": ["env"],
+  "presets": [
+    "backpack-core/babel"
+
+  ],
   "plugins": [
-    "transform-runtime",
-    "transform-decorators-legacy",
-    "transform-class-properties"
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "legacy": true
+      }
+    ],
+    "@babel/plugin-syntax-dynamic-import"
   ]
 }

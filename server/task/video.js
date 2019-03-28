@@ -1,11 +1,8 @@
-const cp = require('child_process')
-const path = require('path')
-const nanoid = require('nanoid')
-const { model } = require('mongoose')
-const upload = require('../lib/upload')
-
-const Movie = model('Movie')
-const Video = model('Video')
+import cp from 'child_process'
+import path from 'path'
+import nanoid from 'nanoid'
+import { Movie, Video } from '../database/schema'
+import upload from '../lib/upload'
 
 async function saveVideos(movie, videos) {
   const videoKeys = []

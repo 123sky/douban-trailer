@@ -1,28 +1,40 @@
 <template>
-  <div class="movie" :style="{'background-color':`rgba(${dominant},0.5)`,color:opposite}">
-    <div class="bg-img" :style="{'background-image':`url(${backgroundImg})`}" />
-    <div class="content">
-      <div class="info">
-        <div class="primary">
-          <div class="title">
-            {{ data.title }}
-          </div>
-          <div class="line summary">
+  <div
+    class="movie"
+    :style="{ 'background-color': `rgba(${dominant},0.5)`, color: opposite }"
+  >
+    <div
+      class="bg-img"
+      :style="{ 'background-image': `url(${backgroundImg})` }"
+    >
+      <div class="content">
+        <div class="info">
+          <div class="primary">
+            <div class="title">
+              {{ data.title }}
+            </div>
+            <div class="line summary" />
             {{ data.summary }}
           </div>
           <div class="line">
-            <span class="runtime" :style="{'background-color': palette}">2:02h</span>
+            <span class="runtime" :style="{ 'background-color': palette }">
+              2:02h
+            </span>
             <span class="director">
               Christopher Nolan
             </span>
           </div>
           <div class="line">
             <span>{{ data.year }}</span>
-            <span v-for="category in data.category" :key="category._id">{{ category.name }}</span>
+            <span v-for="category in data.category" :key="category._id">{{
+              category.name
+            }}</span>
           </div>
           <div class="line rate">
-            <i :style="{'color': palette}" class="iconfont icon-redu" />
-            <span class="num" :style="{'color': palette}">{{ data.rate.toFixed(1) }}</span>
+            <i :style="{ color: palette }" class="iconfont icon-redu" />
+            <span class="num" :style="{ color: palette }">{{
+              data.rate.toFixed(1)
+            }}</span>
             <span class="total-num">/ 10</span>
           </div>
         </div>
@@ -33,7 +45,8 @@
             </div>
             <ul>
               <li v-for="cast in data.casts" :key="cast._id">
-                <img :src="host+cast.avatarKey" alt="cast.name">
+                <!-- eslint-disable-next-line vue/html-self-closing -->
+                <img :src="host + cast.avatarKey" alt="cast.name" />
                 <div class="cast-name">
                   {{ cast.name }}
                 </div>
@@ -65,43 +78,38 @@
         </div>
       </div>
       <div class="pictures">
+        <!-- eslint-disable-next-line vue/html-self-closing -->
         <img
-          v-if="data.videos.length>1"
-          :src="host+data.videos[1].coverKey" 
+          v-if="data.videos.length > 1"
+          :src="host + data.videos[1].coverKey"
           alt="tupian1"
-        ><img
-          :src="host+data.pictureKeys[0]" 
-          alt="tupian1"
-        ><img
-          :src="host+data.pictureKeys[1]" 
-          alt="tupian2"
-        ><img
-          v-if="data.videos.length<=1"
-          :src="host+data.pictureKeys[2]"
+        />
+        <!-- eslint-disable-next-line vue/html-self-closing -->
+        <img :src="host + data.pictureKeys[0]" alt="tupian1" />
+        <!-- eslint-disable-next-line vue/html-self-closing -->
+        <img :src="host + data.pictureKeys[1]" alt="tupian2" />
+        <!-- eslint-disable-next-line vue/html-self-closing -->
+        <img
+          v-if="data.videos.length <= 1"
+          :src="host + data.pictureKeys[2]"
           alt="tupian3"
-        >
+        />
       </div>
       <div class="related">
         <div class="section-title">
           相同类型
         </div>
         <div>
-          <img 
-            :src="host+data.posterKey"
-            alt="haibao"
-          ><img 
-            :src="host+data.posterKey"
-            alt="haibao"
-          >
+          <!-- eslint-disable-next-line vue/html-self-closing -->
+          <img :src="host + data.posterKey" alt="haibao" />
+          <!-- eslint-disable-next-line vue/html-self-closing -->
+          <img :src="host + data.posterKey" alt="haibao" />
         </div>
         <div>
-          <img 
-            :src="host+data.posterKey"
-            alt="haibao"
-          ><img 
-            :src="host+data.posterKey"
-            alt="haibao"
-          >
+          <!-- eslint-disable-next-line vue/html-self-closing -->
+          <img :src="host + data.posterKey" alt="haibao" />
+          <!-- eslint-disable-next-line vue/html-self-closing -->
+          <img :src="host + data.posterKey" alt="haibao" />
         </div>
       </div>
     </div>
