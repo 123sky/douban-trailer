@@ -4,6 +4,7 @@ ENV NODE_ENV=production
 ENV APP_PATH /douban-trailer
 ENV APP_PORT 3000
 ENV DEBUGGER_PORT 9229
+ENV BASE_URL http://chenjianpeng.xyz:3000
 
 # Create app directory
 WORKDIR $APP_PATH

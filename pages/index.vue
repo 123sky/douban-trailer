@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/plugins/axios'
 import FullPage from '@/components/FullPage'
 import movie from './movie'
 export default {
@@ -29,7 +29,7 @@ export default {
     }
   },
   async asyncData({ app }) {
-    const { data } = await axios.get('http://localhost:3000/movies/all')
+    const { data } = await axios.get('/movies/all')
     const res = {
       data: data.data
     }
@@ -38,7 +38,7 @@ export default {
   created() {},
   methods: {
     async update() {
-      const res = await axios.put('http://localhost:3000/update/')
+      const res = await axios.put('/update/')
       console.log(res)
     }
   }
