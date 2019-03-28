@@ -19,10 +19,8 @@ const appLogger = consola.withScope(`APP`)
 
   const nuxt = new Nuxt(config)
 
-  const {
-    host = process.env.HOST || '0.0.0.0',
-    port = process.env.PORT || 3000
-  } = nuxt.options.server
+  const host = process.env.HOST || '0.0.0.0'
+  const port = process.env.PORT || 3000
 
   if (config.dev) {
     const builder = new Builder(nuxt)
