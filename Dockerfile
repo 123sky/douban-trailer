@@ -21,4 +21,4 @@ COPY . $APP_PATH
 EXPOSE $APP_PORT
 EXPOSE $DEBUGGER_PORT
 
-CMD [ "yarn", "start" ]
+CMD [ "npm", "start" ]
