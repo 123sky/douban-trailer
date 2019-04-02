@@ -56,11 +56,12 @@ export default async function() {
       }
 
       try {
-        const res = await upload(cast.avatars.large, nanoid() + '.jpg')
-        if (res.key) {
-          newCast.avatarKey = res.key
+        const path = `/avatar/${nanoid()}.jpg`
+        const res = await upload(cast.avatars.large, path)
+        if (res) {
+          newCast.avatarKey = path
         } else {
-          console.log('error avatar upload res no key', res)
+          console.log('api success but error avatar upload', res)
         }
       } catch (error) {
         console.log('error upload avatar', error)

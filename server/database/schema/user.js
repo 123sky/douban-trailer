@@ -43,6 +43,7 @@ const UserSchema = new Schema({
   }
 })
 
+// 每次创建，不存库
 UserSchema.virtual('isLocked').get(() => {
   return !!(this.lockUntil && this.lockUntil > Date.now())
 })

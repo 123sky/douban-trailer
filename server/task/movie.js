@@ -33,9 +33,15 @@ export default function() {
         const item = result[index]
         let movie = await Movie.findOne({ doubanId: item.doubanId })
         if (!movie) {
-          const posterKey = await upload(item.poster, nanoid() + '.jpg')
-          item.posterKey = posterKey.key
           try {
+            const path = `/poster/${nanoid()}.jpg`
+            const res = await upload(item.poster, path)
+            if (res) {
+              item.posterKey = path
+            } else {
+              console.log('api success but error poster upload', res)
+            }
+
             movie = new Movie(item)
             await movie.save()
           } catch (error) {

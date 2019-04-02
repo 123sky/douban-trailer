@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer'
+const puppeteer = require('puppeteer')
 
 const BASE_URL = `https://movie.douban.com/subject/`
 

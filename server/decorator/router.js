@@ -49,8 +49,9 @@ export const setRouter = method => path => (target, key, descriptor) => {
   return descriptor
 }
 
-export const Controller = path => target =>
-  (target.prototype[pathPrefix] = path)
+export const Controller = path => target => {
+  target.prototype[pathPrefix] = path
+}
 
 export const Get = setRouter('get')
 
@@ -67,12 +68,7 @@ export const Log = convert(async (ctx, next) => {
   console.timeEnd(`${logTimes}: ${ctx.method} - ${ctx.url}`)
 })
 
-/**
- * @Required({
- *   body: ['name', 'password']
- * })
- */
-export const Required = paramsObj =>
+export const Required = paramsObj => {
   convert(async (ctx, next) => {
     let errs = []
 
@@ -89,6 +85,7 @@ export const Required = paramsObj =>
     }
     await next()
   })
+}
 
 export const Auth = convert(async (ctx, next) => {
   if (!ctx.session.user) {

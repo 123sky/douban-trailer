@@ -11,9 +11,10 @@ async function saveVideos(movie, videos) {
       const params = videos[index]
 
       try {
-        const videoRes = await upload(params.video, nanoid() + '.mp4')
-        if (videoRes.key) {
-          params.videoKey = videoRes.key
+        const path = `/video/${nanoid()}.mp4`
+        const videoRes = await upload(params.video, path)
+        if (videoRes) {
+          params.videoKey = path
         } else {
           console.log('error video upload res no key', videoRes)
         }
@@ -22,9 +23,10 @@ async function saveVideos(movie, videos) {
       }
 
       try {
-        const coverRes = await upload(params.cover, nanoid() + '.jpg')
-        if (coverRes.key) {
-          params.coverKey = coverRes.key
+        const path = `/video-cover/${nanoid()}.jpg`
+        const coverRes = await upload(params.cover, path)
+        if (coverRes) {
+          params.coverKey = path
         } else {
           console.log('error cover upload res no key', coverRes)
         }
@@ -48,9 +50,10 @@ async function uploadPictures(pictures) {
   for (let index = 0; index < pictures.length; index++) {
     const picture = pictures[index]
     try {
-      const pictureRes = await upload(picture, nanoid() + '.jpg')
-      if (pictureRes.key) {
-        pictureKeys.push(pictureRes.key)
+      const path = `/picture/${nanoid()}.jpg`
+      const pictureRes = await upload(picture, path)
+      if (pictureRes) {
+        pictureKeys.push(path)
       }
     } catch (error) {
       console.log('error upload picture', error)

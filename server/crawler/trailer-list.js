@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer'
+const puppeteer = require('puppeteer')
 
 const url = `https://movie.douban.com/cinema/nowplaying/hangzhou/`
 

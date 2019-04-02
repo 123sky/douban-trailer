@@ -1,4 +1,7 @@
 <template>
+  <!-- eslint-disable vue/html-self-closing -->
+  <!-- eslint-disable prettier/prettier -->
+  <!-- eslint-disable-next-line vue/html-self-closing -->
   <div
     class="movie"
     :style="{ 'background-color': `rgba(${dominant},0.5)`, color: opposite }"
@@ -6,14 +9,14 @@
     <div
       class="bg-img"
       :style="{ 'background-image': `url(${backgroundImg})` }"
-    >
-      <div class="content">
-        <div class="info">
-          <div class="primary">
-            <div class="title">
-              {{ data.title }}
-            </div>
-            <div class="line summary" />
+    />
+    <div class="content">
+      <div class="info">
+        <div class="primary">
+          <div class="title">
+            {{ data.title }}
+          </div>
+          <div class="line summary">
             {{ data.summary }}
           </div>
           <div class="line">
@@ -78,18 +81,17 @@
         </div>
       </div>
       <div class="pictures">
-        <!-- eslint-disable-next-line vue/html-self-closing -->
         <img
           v-if="data.videos.length > 1"
           :src="host + data.videos[1].coverKey"
           alt="tupian1"
-        />
-        <!-- eslint-disable-next-line vue/html-self-closing -->
-        <img :src="host + data.pictureKeys[0]" alt="tupian1" />
-        <!-- eslint-disable-next-line vue/html-self-closing -->
-        <img :src="host + data.pictureKeys[1]" alt="tupian2" />
-        <!-- eslint-disable-next-line vue/html-self-closing -->
-        <img
+        /><img
+          :src="host + data.pictureKeys[0]"
+          alt="tupian1"
+        /><img
+          :src="host + data.pictureKeys[1]"
+          alt="tupian2"
+        /><img
           v-if="data.videos.length <= 1"
           :src="host + data.pictureKeys[2]"
           alt="tupian3"
@@ -133,7 +135,7 @@ export default {
   },
   data() {
     return {
-      host: 'http://pn9g0l6pg.bkt.clouddn.com/',
+      host: 'http://ppbdn99ie.bkt.clouddn.com/',
       dominant: '',
       dominantRGB: '',
       opposite: '',
@@ -178,11 +180,10 @@ export default {
     position: absolute;
     top: 0;
     z-index: -1;
-    text-align: center;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    &:after {
+    &:before {
       position: absolute;
       content: '';
       width: 100%;
