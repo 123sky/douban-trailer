@@ -9,7 +9,7 @@ const sleep = time =>
 
 process.on('message', async function(movies) {
   const browser = await puppeteer.launch({
-    args: ['--no-sandbox'],
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
     dumpio: false
   })
   const page = await browser.newPage()

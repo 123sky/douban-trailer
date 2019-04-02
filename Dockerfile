@@ -2,8 +2,6 @@ FROM node:10.12.0
 
 ENV NODE_ENV=production
 ENV APP_PATH /douban-trailer
-ENV APP_PORT 3000
-ENV DEBUGGER_PORT 9229
 ENV BASE_URL http://chenjianpeng.xyz:3000
 
 # Create app directory
@@ -18,8 +16,5 @@ RUN mv /tmp/node_modules $APP_PATH/node_modules
 
 # Bundle app source
 COPY . $APP_PATH
-
-EXPOSE $APP_PORT
-EXPOSE $DEBUGGER_PORT
 
 CMD [ "npm", "start" ]
