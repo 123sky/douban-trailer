@@ -6,11 +6,20 @@ const sleep = time =>
   new Promise(resolve => {
     setTimeout(resolve, time)
   })
+
 ;(async () => {
-  const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  const launchOptions = {
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage'
+    ],
     dumpio: false
-  })
+  }
+  if (process.env.NODE_ENV === 'production') {
+    launchOptions.executablePath = '/usr/bin/chromium-browser'
+  }
+  const browser = await puppeteer.launch(launchOptions)
   const page = await browser.newPage()
 
   // 打开网页
