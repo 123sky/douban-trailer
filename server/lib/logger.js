@@ -12,12 +12,18 @@ log4js.configure({
       mode: 0o0640,
       flags: 'w+'
     },
+    dateFile: {
+      type: 'dateFile',
+      filename: 'logs/more-important-things.log',
+      pattern: 'yyyy-MM-dd-hh',
+      compress: true
+    },
     out: {
       type: 'stdout'
     }
   },
   categories: {
-    default: { appenders: ['file', 'out'], level: 'info' }
+    default: { appenders: ['file', 'dateFile', 'out'], level: 'info' }
   }
 })
 

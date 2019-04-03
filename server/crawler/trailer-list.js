@@ -1,4 +1,18 @@
 const puppeteer = require('puppeteer')
+const log4js = require('log4js')
+
+log4js.configure({
+  appenders: {
+    out: {
+      type: 'stdout'
+    }
+  },
+  categories: {
+    default: { appenders: ['out'], level: 'info' }
+  }
+})
+
+const logger = log4js.getLogger('things')
 
 const url = `https://movie.douban.com/cinema/nowplaying/hangzhou/`
 
@@ -23,7 +37,7 @@ const sleep = time =>
   const page = await browser.newPage()
 
   // 打开网页
-  console.log('opening ' + url)
+  logger.info('opening ' + url)
   await page.goto(url, {
     waitUntil: 'networkidle2'
   })
@@ -32,7 +46,7 @@ const sleep = time =>
   await sleep(3000)
   await page.waitForSelector('.more')
   for (let i = 0; i < 0; i++) {
-    console.log('geting more ' + i)
+    logger.info('geting more ' + i)
     await sleep(3000)
     await page.click('.more')
   }

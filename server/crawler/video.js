@@ -1,4 +1,18 @@
 const puppeteer = require('puppeteer')
+const log4js = require('log4js')
+
+log4js.configure({
+  appenders: {
+    out: {
+      type: 'stdout'
+    }
+  },
+  categories: {
+    default: { appenders: ['out'], level: 'info' }
+  }
+})
+
+const logger = log4js.getLogger('things')
 
 const BASE_URL = `https://movie.douban.com/subject/`
 
@@ -27,7 +41,7 @@ process.on('message', async function(movies) {
 
     // 获取视频页面，视频封面图
     const url = BASE_URL + movie.doubanId
-    console.log('opening ' + url)
+    logger.info('opening ' + url)
     await page.goto(url, {
       waitUntil: 'networkidle2'
     })

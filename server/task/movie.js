@@ -25,6 +25,8 @@ export default function() {
       if (err) {
         logger.error('movie child process exit err: ', err)
         reject(err)
+      } else {
+        logger.info('movie child process exit normally')
       }
     })
 

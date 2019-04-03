@@ -90,7 +90,7 @@ export default function() {
         )
         reject(new Error('exit code' + code))
       } else {
-        logger.error('movie child process exit code: ' + code)
+        logger.info('movie child process exit normally')
       }
     })
 
