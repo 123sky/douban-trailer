@@ -1,9 +1,10 @@
 import KoaRouter from 'koa-router'
 import R from 'ramda'
+import logger from '../lib/logger'
 
 const pathPrefix = Symbol('pathPrefix')
 const routeMap = []
-let logTimes = 0
+const logTimes = 0
 
 const resolvePath = R.unless(R.startsWith('/'), R.curryN(2, R.concat)('/'))
 
@@ -60,13 +61,6 @@ export const Post = setRouter('post')
 export const Put = setRouter('put')
 
 export const Delete = setRouter('delete')
-
-export const Log = convert(async (ctx, next) => {
-  logTimes++
-  console.time(`${logTimes}: ${ctx.method} - ${ctx.url}`)
-  await next()
-  console.timeEnd(`${logTimes}: ${ctx.method} - ${ctx.url}`)
-})
 
 export const Required = paramsObj => {
   convert(async (ctx, next) => {

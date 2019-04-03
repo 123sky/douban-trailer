@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import logger from '../lib/logger'
 
 const db =
   process.env.NODE_ENV === 'production'
@@ -24,7 +25,7 @@ export const connect = () => {
 
     mongoose.connection.on('disconnected', () => {
       if (++connectTimes < MAXCONNECTTIMES) {
-        console.log('MongoDB Reconnect ' + connectTimes)
+        logger.info('MongoDB Reconnect ' + connectTimes)
         mongoose.connect(db)
       } else {
         throw new Error('MongoDB Connected Error!')
@@ -33,7 +34,7 @@ export const connect = () => {
 
     mongoose.connection.on('error', () => {
       if (++connectTimes < MAXCONNECTTIMES) {
-        console.log('MongoDB Reconnect ' + connectTimes)
+        logger.info('MongoDB Reconnect ' + connectTimes)
         mongoose.connect(db)
       } else {
         throw new Error('MongoDB Connected Error!')
@@ -42,7 +43,7 @@ export const connect = () => {
 
     mongoose.connection.on('open', () => {
       resolve()
-      console.log('MongoDB Connected Successfully!')
+      logger.info('MongoDB Connected Successfully!')
     })
   })
 }

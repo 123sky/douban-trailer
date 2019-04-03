@@ -3,6 +3,7 @@ import path from 'path'
 import nanoid from 'nanoid'
 import { Movie } from '../database/schema'
 import upload from '../lib/upload'
+import logger from '../lib/logger'
 
 export default function() {
   return new Promise((resolve, reject) => {
@@ -13,7 +14,7 @@ export default function() {
     child.on('error', err => {
       if (invoked) return
       invoked = true
-      console.log('movie child process err: ', err)
+      logger.error('movie child process err: ', err)
       reject(err)
     })
 
@@ -22,13 +23,14 @@ export default function() {
       invoked = false
       const err = code === 0 ? null : new Error('exit code' + code)
       if (err) {
-        console.log('movie child process exit err: ', err)
+        logger.error('movie child process exit err: ', err)
         reject(err)
       }
     })
 
     child.on('message', async data => {
       const result = data.result
+      let newMoviesCount = 0
       for (let index = 0; index < result.length; index++) {
         const item = result[index]
         let movie = await Movie.findOne({ doubanId: item.doubanId })
@@ -39,16 +41,18 @@ export default function() {
             if (res) {
               item.posterKey = path
             } else {
-              console.log('api success but error poster upload', res)
+              logger.error('api success but error poster upload', res)
             }
 
             movie = new Movie(item)
             await movie.save()
+            newMoviesCount++
           } catch (error) {
-            console.error('save movie err', error)
+            logger.error('save movie err', error)
           }
         }
       }
+      logger.info(`total:${result.length}  new:${newMoviesCount}`)
       resolve()
     })
   })

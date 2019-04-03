@@ -2,6 +2,7 @@ import rp from 'request-promise-native'
 import nanoid from 'nanoid'
 import { Category, Movie } from '../database/schema'
 import upload from '../lib/upload'
+import logger from '../lib/logger'
 
 async function fetchMovie(item) {
   const url = `http://api.douban.com/v2/movie/subject/${item.doubanId}`
@@ -10,7 +11,7 @@ async function fetchMovie(item) {
   try {
     body = JSON.parse(res)
   } catch (error) {
-    console.log(error)
+    logger.error(error)
   }
   return body
 }
@@ -61,10 +62,10 @@ export default async function() {
         if (res) {
           newCast.avatarKey = path
         } else {
-          console.log('api success but error avatar upload', res)
+          logger.error('api success but error avatar upload', res)
         }
       } catch (error) {
-        console.log('error upload avatar', error)
+        logger.error('error upload avatar', error)
       }
       movie.casts.push(newCast)
     }

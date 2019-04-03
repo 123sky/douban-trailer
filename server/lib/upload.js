@@ -1,5 +1,6 @@
 import qiniu from 'qiniu'
 import config from '../config'
+import logger from '../lib/logger'
 
 const accessKey = config.qiniu.AK
 const secretKey = config.qiniu.SK
@@ -14,10 +15,10 @@ export default (url, key) =>
   new Promise((resolve, reject) => {
     bucketManager.fetch(url, bucket, key, function(err, respBody, respInfo) {
       if (err) {
-        console.log(err)
+        logger.error(err)
         reject(err)
       } else if (respInfo.statusCode === 200) {
-        console.log('upload successful', key)
+        logger.info('upload successful', key)
         resolve({ key })
       } else {
         reject(respInfo)

@@ -3,6 +3,7 @@ import path from 'path'
 import nanoid from 'nanoid'
 import { Movie, Video } from '../database/schema'
 import upload from '../lib/upload'
+import logger from '../lib/logger'
 
 async function saveVideos(movie, videos) {
   const videoKeys = []
@@ -16,10 +17,10 @@ async function saveVideos(movie, videos) {
         if (videoRes) {
           params.videoKey = path
         } else {
-          console.log('error video upload res no key', videoRes)
+          logger.error('error video upload res no key', videoRes)
         }
       } catch (error) {
-        console.log('error upload video', error)
+        logger.error('error upload video', error)
       }
 
       try {
@@ -28,10 +29,10 @@ async function saveVideos(movie, videos) {
         if (coverRes) {
           params.coverKey = path
         } else {
-          console.log('error cover upload res no key', coverRes)
+          logger.error('error cover upload res no key', coverRes)
         }
       } catch (error) {
-        console.log('error upload cover', error)
+        logger.error('error upload cover', error)
       }
 
       params.movie = movie._id
@@ -39,7 +40,7 @@ async function saveVideos(movie, videos) {
       const res = await video.save()
       videoKeys.push(res._id)
     } catch (error) {
-      console.error('save video err', error)
+      logger.error('save video err', error)
     }
   }
   return videoKeys
@@ -56,7 +57,7 @@ async function uploadPictures(pictures) {
         pictureKeys.push(path)
       }
     } catch (error) {
-      console.log('error upload picture', error)
+      logger.error('error upload picture', error)
     }
   }
   return pictureKeys
@@ -75,7 +76,7 @@ export default function() {
     child.on('error', err => {
       if (invoked) return
       invoked = true
-      console.log('movie child process err: ', err)
+      logger.error('movie child process err: ', err)
       reject(err)
     })
 
@@ -83,13 +84,13 @@ export default function() {
       if (invoked) return
       invoked = false
       if (code !== 0) {
-        console.log(
+        logger.error(
           'movie child process exit err: ',
           new Error('exit code' + code)
         )
         reject(new Error('exit code' + code))
       } else {
-        console.log('movie child process exit code: ' + code)
+        logger.error('movie child process exit code: ' + code)
       }
     })
 

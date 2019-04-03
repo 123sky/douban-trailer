@@ -19,8 +19,8 @@ const port = process.env.PORT || 3000
 
   app.use(logger())
 
-  const instance = new Route(app)
-  await instance.init()
+  const RouteInstance = new Route(app)
+  await RouteInstance.init()
 
   const nuxt = new Nuxt(config)
 

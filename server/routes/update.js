@@ -2,6 +2,7 @@ import { Controller, Put } from '../decorator/router'
 import movie from '../task/movie'
 import movieDetail from '../task/detail'
 import video from '../task/video'
+import logger from '../lib/logger'
 
 @Controller('/update')
 class UpdateRouter {
@@ -26,7 +27,7 @@ class UpdateRouter {
         },
         success: true
       }
-      console.log(error)
+      logger.error(error)
     }
   }
 }
