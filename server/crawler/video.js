@@ -23,15 +23,11 @@ const sleep = time =>
 
 process.on('message', async function(movies) {
   const launchOptions = {
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage'
-    ],
+    args: ['--no-sandbox', '--disable-dev-shm-usage'],
     dumpio: false
   }
   if (process.env.NODE_ENV === 'production') {
-    launchOptions.executablePath = '/usr/bin/chromium-browser'
+    launchOptions.executablePath = process.env.CHROME_BIN
   }
   const browser = await puppeteer.launch(launchOptions)
   const page = await browser.newPage()

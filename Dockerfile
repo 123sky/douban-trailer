@@ -3,9 +3,22 @@ FROM node:10-alpine
 ENV NODE_ENV=production
 ENV APP_PATH /douban-trailer
 ENV BASE_URL http://chenjianpeng.xyz:3000
+ENV CHROME_BIN /usr/bin/chromium-browser
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 # Create app directory
 WORKDIR $APP_PATH
+
+# Installs latest Chromium (72) package.
+RUN apk update && apk upgrade && \
+  echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
+  echo @edge http://nl.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories && \
+  apk add --update ca-certificates && \
+  apk add --no-cache \
+  ttf-freefont \
+  chromium@edge \
+  nss@edge \
+  harfbuzz@edge
 
 # Install app dependencies efficiently
 # http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/
@@ -21,25 +34,5 @@ RUN apk del .build-deps
 
 # Bundle app source
 COPY . $APP_PATH
-
-# 设置时区
-RUN rm -rf /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-
-RUN echo "https://mirrors.aliyun.com/alpine/v3.8/main/" > /etc/apk/repositories \
-  && echo "https://mirrors.aliyun.com/alpine/v3.8/community/" >> /etc/apk/repositories \
-  && echo "https://mirrors.aliyun.com/alpine/edge/testing/" >> /etc/apk/repositories \
-  && apk -U --no-cache update && apk -U --no-cache --allow-untrusted add \
-  chromium \
-  nss \
-  freetype \
-  harfbuzz \
-  ttf-freefont
-
-# Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-
-# Add user so we don't need --no-sandbox.
-RUN mkdir -p /home/pptruser/Downloads \
-  && mkdir /app
 
 CMD [ "yarn", "start" ]
