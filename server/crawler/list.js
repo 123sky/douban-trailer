@@ -1,18 +1,4 @@
-const puppeteer = require('puppeteer')
-const log4js = require('log4js')
-
-log4js.configure({
-  appenders: {
-    out: {
-      type: 'stdout'
-    }
-  },
-  categories: {
-    default: { appenders: ['out'], level: 'info' }
-  }
-})
-
-const logger = log4js.getLogger('things')
+import logger from '../lib/logger'
 
 const url = `https://movie.douban.com/cinema/nowplaying/hangzhou/`
 
@@ -21,16 +7,8 @@ const sleep = time =>
     setTimeout(resolve, time)
   })
 
-;(async () => {
-  const launchOptions = {
-    args: ['--no-sandbox', '--disable-dev-shm-usage'],
-    dumpio: false
-  }
-  if (process.env.NODE_ENV === 'production') {
-    launchOptions.executablePath = process.env.CHROME_BIN
-  }
-  const browser = await puppeteer.launch(launchOptions)
-  const page = await browser.newPage()
+export default async page => {
+  let result = []
 
   // 打开网页
   logger.info('opening ' + url)
@@ -48,7 +26,7 @@ const sleep = time =>
   }
 
   // 遍历dom， 获取数据
-  const result = await page.evaluate(() => {
+  result = await page.evaluate(() => {
     const $ = window.$
     const items = Array.from($('#nowplaying').find('.list-item'))
     const links = []
@@ -71,10 +49,5 @@ const sleep = time =>
     return links
   })
 
-  await browser.close()
-
-  process.send({
-    result
-  })
-  process.exit(0)
-})()
+  return { result }
+}
