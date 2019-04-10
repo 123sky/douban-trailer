@@ -14,8 +14,9 @@ class MovieRouter {
     const movies = await getAllMovies(type, year)
 
     ctx.body = {
-      data: movies,
-      success: true
+      code: 1,
+      type: 'success',
+      data: movies
     }
   }
 
@@ -26,11 +27,12 @@ class MovieRouter {
     const relativeMovies = await getRelativeMovies(movie)
 
     ctx.body = {
+      code: 1,
+      type: 'success',
       data: {
         movie,
         relativeMovies
-      },
-      success: true
+      }
     }
   }
 }

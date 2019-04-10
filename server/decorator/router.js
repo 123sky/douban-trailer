@@ -1,10 +1,8 @@
 import KoaRouter from 'koa-router'
 import R from 'ramda'
-import logger from '../lib/logger'
 
 const pathPrefix = Symbol('pathPrefix')
 const routeMap = []
-const logTimes = 0
 
 const resolvePath = R.unless(R.startsWith('/'), R.curryN(2, R.concat)('/'))
 
@@ -62,10 +60,9 @@ export const Put = setRouter('put')
 
 export const Delete = setRouter('delete')
 
-export const Required = paramsObj => {
+export const Required = paramsObj =>
   convert(async (ctx, next) => {
     let errs = []
-
     R.forEachObjIndexed((val, key) => {
       errs = errs.concat(R.filter(name => !R.has(name, ctx.request[key]))(val))
     })(paramsObj)
@@ -79,9 +76,9 @@ export const Required = paramsObj => {
     }
     await next()
   })
-}
 
 export const Auth = convert(async (ctx, next) => {
+  console.log(ctx.session)
   if (!ctx.session.user) {
     return (ctx.body = {
       success: false,

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import logger from '../lib/logger'
+import User from './schema/user'
 
 const db =
   process.env.NODE_ENV === 'production'
@@ -46,4 +47,16 @@ export const connect = () => {
       logger.info('MongoDB Connected Successfully!')
     })
   })
+}
+
+export const initAdmin = async () => {
+  const user = await User.findOne({ userName: 'Admin' })
+  if (!user) {
+    const newUser = new User({
+      userName: 'Admin',
+      email: '1210929612@qq.com',
+      password: '1q2w3e'
+    })
+    await newUser.save()
+  }
 }

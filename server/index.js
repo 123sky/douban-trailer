@@ -1,10 +1,10 @@
 import Koa from 'koa'
 import consola from 'consola'
 import { Nuxt, Builder } from 'nuxt'
-import logger from 'koa-logger'
 import config from '../nuxt.config.js'
+import general from './middleware/general'
 import { Route } from './decorator/router'
-import { connect } from './database/init'
+import { connect, initAdmin } from './database/init'
 
 const appLogger = consola.withScope(`APP`)
 const host = process.env.HOST || '0.0.0.0'
@@ -12,12 +12,13 @@ const port = process.env.PORT || 3000
 
 ;(async () => {
   await connect()
+  await initAdmin()
 
   const app = new Koa()
 
   config.dev = !(app.env === 'production')
 
-  app.use(logger())
+  general(app)
 
   const RouteInstance = new Route(app)
   await RouteInstance.init()

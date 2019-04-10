@@ -59,15 +59,20 @@ UserSchema.pre('save', function(next) {
 
 // 密码加密
 UserSchema.pre('save', function(next) {
-  if (!this.isModified('password')) return next
+  const that = this
+
+  if (!that.isModified('password')) return next()
+
   bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
     if (err) return next(err)
-    bcrypt.hash(this.password, salt, (err, hash) => {
+
+    bcrypt.hash(that.password, salt, (err, hash) => {
       if (err) return next(err)
-      this.password = hash
+
+      that.password = hash
+      next()
     })
   })
-  next()
 })
 
 // 密码是否正确

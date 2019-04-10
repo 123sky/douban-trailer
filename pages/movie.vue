@@ -1,7 +1,4 @@
 <template>
-  <!-- eslint-disable vue/html-self-closing -->
-  <!-- eslint-disable prettier/prettier -->
-  <!-- eslint-disable-next-line vue/html-self-closing -->
   <div
     class="movie"
     :style="{ 'background-color': `rgba(${dominant},0.5)`, color: opposite }"
@@ -48,7 +45,6 @@
             </div>
             <ul>
               <li v-for="cast in data.casts" :key="cast._id">
-                <!-- eslint-disable-next-line vue/html-self-closing -->
                 <img :src="host + cast.avatarKey" alt="cast.name" />
                 <div class="cast-name">
                   {{ cast.name }}
@@ -85,10 +81,7 @@
           v-if="data.videos.length > 1"
           :src="host + data.videos[1].coverKey"
           alt="tupian1"
-        /><img
-          :src="host + data.pictureKeys[0]"
-          alt="tupian1"
-        /><img
+        /><img :src="host + data.pictureKeys[0]" alt="tupian1" /><img
           :src="host + data.pictureKeys[1]"
           alt="tupian2"
         /><img
@@ -102,15 +95,11 @@
           相同类型
         </div>
         <div>
-          <!-- eslint-disable-next-line vue/html-self-closing -->
           <img :src="host + data.posterKey" alt="haibao" />
-          <!-- eslint-disable-next-line vue/html-self-closing -->
           <img :src="host + data.posterKey" alt="haibao" />
         </div>
         <div>
-          <!-- eslint-disable-next-line vue/html-self-closing -->
           <img :src="host + data.posterKey" alt="haibao" />
-          <!-- eslint-disable-next-line vue/html-self-closing -->
           <img :src="host + data.posterKey" alt="haibao" />
         </div>
       </div>

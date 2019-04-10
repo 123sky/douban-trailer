@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer'
-import { Controller, Put } from '../decorator/router'
+import { Controller, Put, Auth } from '../decorator/router'
 import list from '../task/list'
 import media from '../task/media'
 import detail from '../task/detail'
@@ -41,11 +41,13 @@ const updateTask = async () => {
 @Controller('/update')
 class UpdateRouter {
   @Put('/')
+  @Auth
   update(ctx, next) {
     if (isUpdating) {
       ctx.body = {
         data: {
           code: 2,
+          type: 'warning',
           message: '数据已经在更新了，请稍后再试'
         },
         success: true
@@ -54,7 +56,8 @@ class UpdateRouter {
       updateTask()
       ctx.body = {
         data: {
-          code: 0,
+          code: 1,
+          type: 'success',
           message: '开始更新数据，请稍后'
         },
         success: true
