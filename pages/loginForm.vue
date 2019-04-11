@@ -29,7 +29,6 @@
 <script>
 import axios from '@/plugins/axios'
 import Alert from '@/components/Alert'
-import Cookies from 'js-cookie'
 export default {
   components: {
     Alert
@@ -45,10 +44,11 @@ export default {
   },
   methods: {
     async submit() {
-      const res = await axios.post('/user/login', this.form)
+      const res = await axios.post('/user/check', this.form)
       if (res.code === 1) {
-        this.$emit('afterLogin', res.data._id)
-        Cookies.set('userId', res.data._id)
+        const res = await axios.put('/update/')
+        this.$emit('close')
+        console.log(res)
       } else {
         this.response = res
       }

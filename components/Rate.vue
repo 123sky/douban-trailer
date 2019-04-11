@@ -8,7 +8,7 @@
         />
       </li>
     </ul>
-    <span>{{ data }}</span>
+    <!-- <span>{{ data }}</span> -->
   </div>
 </template>
 
@@ -25,6 +25,7 @@ export default {
 
 <style lang="scss" scoped>
 .rate {
+  display: inline-block;
   line-height: 16px;
   .stars {
     display: inline-block;

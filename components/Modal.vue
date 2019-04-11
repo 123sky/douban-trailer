@@ -1,5 +1,5 @@
 <template>
-  <div v-show="visible" class="modal-wrap">
+  <div v-if="visible" class="modal-wrap">
     <div class="modal" :style="{ width: width }">
       <div class="header">
         <slot name="title" />

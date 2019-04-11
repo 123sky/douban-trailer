@@ -10,7 +10,7 @@ async function saveVideos({ _id, media }) {
     const params = media.videos[index]
 
     try {
-      const path = `/video/${nanoid()}.mp4`
+      const path = `video/${nanoid()}.mp4`
       const videoRes = await upload(params.url, path)
       if (videoRes) {
         params.videoKey = path
@@ -22,7 +22,7 @@ async function saveVideos({ _id, media }) {
     }
 
     try {
-      const path = `/video-cover/${nanoid()}.jpg`
+      const path = `video-cover/${nanoid()}.jpg`
       const coverRes = await upload(params.cover, path)
       if (coverRes) {
         params.coverKey = path
@@ -50,7 +50,7 @@ async function uploadPictures(pictures) {
   for (let index = 0; index < pictures.length; index++) {
     const picture = pictures[index]
     try {
-      const path = `/picture/${nanoid()}.jpg`
+      const path = `picture/${nanoid()}.jpg`
       const pictureRes = await upload(picture, path)
       if (pictureRes) {
         pictureKeys.push(path)
@@ -60,6 +60,21 @@ async function uploadPictures(pictures) {
     }
   }
   return pictureKeys
+}
+
+async function saveRelated(related) {
+  for (let index = 0; index < related.length; index++) {
+    try {
+      const path = `related/${nanoid()}.jpg`
+      const res = await upload(related[index].poster, path)
+      if (res) {
+        related[index].posterKey = path
+      }
+    } catch (error) {
+      logger.error('error upload related poster', error)
+    }
+  }
+  return related
 }
 
 export default async page => {
@@ -85,11 +100,14 @@ export default async page => {
     const videoKeys = await saveVideos(movie)
     const pictures = movie.media.pictures
     const pictureKeys = await uploadPictures(pictures)
+    const related = await saveRelated(movie.media.related)
 
     const movieModel = await Movie.findOne({ _id: movie._id })
     movieModel.videos = videoKeys
     movieModel.pictures = pictures
     movieModel.pictureKeys = pictureKeys
+    movieModel.comments = movie.media.comments
+    movieModel.related = related
     try {
       await movieModel.save()
     } catch (error) {

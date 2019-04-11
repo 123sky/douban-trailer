@@ -25,12 +25,16 @@ const getVideoUrl = async link => {
 
 const handlePage = () => {
   const $ = window.$
-  const mediaEl = Array.from($('.related-pic-bd li')) || []
+
   const media = {
     videos: [],
-    pictures: []
+    pictures: [],
+    comments: [],
+    related: []
   }
 
+  // 视频图片
+  const mediaEl = Array.from($('.related-pic-bd li')) || []
   for (let indexOfMedia = 0; indexOfMedia < mediaEl.length; indexOfMedia++) {
     const element = mediaEl[indexOfMedia]
     const it = $(element)
@@ -59,10 +63,69 @@ const handlePage = () => {
     }
   }
 
+  // 评论
+  const commentEl = Array.from($('#hot-comments .comment-item')) || []
+  for (
+    let indexOfComment = 0;
+    indexOfComment < commentEl.length;
+    indexOfComment++
+  ) {
+    const element = commentEl[indexOfComment]
+    const it = $(element)
+    const comment = {}
+
+    const $t = it.find('.comment-info')
+    comment.name = $t
+      .find('a')
+      .text()
+      .trim()
+    comment.time = $t
+      .find('.comment-time')
+      .text()
+      .trim()
+    comment.rate =
+      $t
+        .find('.rating')
+        .attr('class')
+        .split(' ')[0]
+        .slice(-2, -1) * 2 || 0
+
+    const $commit = it.find('.comment p')
+    const $full = $commit.find('.full')
+    if ($full.length > 0) {
+      comment.content = $full.text().trim()
+    } else {
+      const $short = $commit.find('.short')
+      comment.content = $short.text().trim()
+    }
+
+    media.comments.push(comment)
+  }
+
+  // 相关电影
+  const relatedEl = Array.from($('#recommendations dl dt')) || []
+  for (
+    let indexOfRelated = 0;
+    indexOfRelated < relatedEl.length;
+    indexOfRelated++
+  ) {
+    const element = relatedEl[indexOfRelated]
+    const it = $(element)
+    const related = {}
+
+    related.url = it.find('a').attr('href')
+    related.poster = it.find('a img').attr('src')
+    related.name = it
+      .find('a img')
+      .attr('alt')
+      .trim()
+
+    media.related.push(related)
+  }
+
   return media
 }
 
-// 获取视频页面，视频封面图
 export default async (pageInstance, movies) => {
   page = pageInstance
   for (let index = 0; index < movies.length; index++) {

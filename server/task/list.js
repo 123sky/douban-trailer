@@ -13,7 +13,7 @@ export default async page => {
     let movie = await Movie.findOne({ doubanId: item.doubanId })
     if (!movie) {
       try {
-        const path = `/poster/${nanoid()}.jpg`
+        const path = `poster/${nanoid()}.jpg`
         const res = await upload(item.poster, path)
         if (res) {
           item.posterKey = path

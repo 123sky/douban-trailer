@@ -46,6 +46,37 @@ class UserRouter {
       data: {}
     })
   }
+
+  @Post('/check')
+  @Required({ body: ['email', 'password'] })
+  async check(ctx, next) {
+    const { email, password } = ctx.request.body
+    let data
+
+    try {
+      data = await checkPassword(email, password)
+    } catch (error) {
+      return (ctx.body = {
+        code: 0,
+        type: 'error',
+        message: '用户校验失败'
+      })
+    }
+
+    if (data.match) {
+      return (ctx.body = {
+        code: 1,
+        type: 'success',
+        data: {}
+      })
+    } else {
+      return (ctx.body = {
+        code: 0,
+        type: 'error',
+        message: '用户校验失败'
+      })
+    }
+  }
 }
 
 export default UserRouter

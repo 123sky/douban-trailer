@@ -17,8 +17,9 @@ const MovieSchema = new Schema({
   rate: Number,
   title: String,
   summary: String,
-  countries: Array,
-  year: Number,
+  country: Array,
+  pubdate: Array,
+  duration: Array,
 
   videos: [
     {
@@ -33,11 +34,36 @@ const MovieSchema = new Schema({
   posterKey: String,
   pictureKeys: Array,
 
+  directors: [
+    {
+      name: String,
+      avatar: String,
+      avatarKey: String
+    }
+  ],
   casts: [
     {
       name: String,
       avatar: String,
       avatarKey: String
+    }
+  ],
+
+  comments: [
+    {
+      name: String,
+      time: String,
+      rate: Number,
+      content: String
+    }
+  ],
+
+  related: [
+    {
+      name: String,
+      poster: String,
+      posterKey: String,
+      url: String
     }
   ],
 

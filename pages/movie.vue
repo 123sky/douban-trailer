@@ -6,8 +6,16 @@
     <div
       class="bg-img"
       :style="{ 'background-image': `url(${backgroundImg})` }"
-    />
-    <div class="content">
+    >
+      <video v-if="isPlaying" controls>
+        <source
+          v-for="video in data.videos"
+          :key="video._id"
+          :src="host + video.videoKey"
+        />
+      </video>
+    </div>
+    <div v-show="!isPlaying" class="content">
       <div class="info">
         <div class="primary">
           <div class="title">
@@ -18,17 +26,25 @@
           </div>
           <div class="line">
             <span class="runtime" :style="{ 'background-color': palette }">
-              2:02h
+              {{ data.duration[0] }}
             </span>
-            <span class="director">
-              Christopher Nolan
+            <span
+              v-for="(director, index) in data.directors"
+              :key="index"
+              class="director"
+            >
+              {{ director.name }}
             </span>
           </div>
           <div class="line">
             <span>{{ data.year }}</span>
-            <span v-for="category in data.category" :key="category._id">{{
-              category.name
-            }}</span>
+            <span
+              v-for="category in data.category"
+              :key="category._id"
+              class="category"
+            >
+              {{ category.name }}
+            </span>
           </div>
           <div class="line rate">
             <i :style="{ color: palette }" class="iconfont icon-redu" />
@@ -54,53 +70,50 @@
           </div>
           <div class="reviews">
             <ul>
-              <li>
-                <rate :data="4" />
-                <p>
-                  没想到还有这么多停留在春晚选花魁的审美，也活该养出次方AB和海量烂片。觉得女主有问题的拜托去看印度歌舞片和DC海王好吗？反正我从定妆照开始就觉得很有代入感，超级英雄又不是超级整容，这角色之前就是普通人，反而更凸显超能力带来的变化，marvel精神本就是普通人也可以成长为英雄；如果本来就是个引入注目的精致花瓶发型一丝不苟打一下看着就要坏了对这个角色塑造又有什么意义？文艺片出身的女主更让漫威电影有史诗感！
-                </p>
+              <li v-for="index in 2" :key="index">
+                <rate :data="data.comments[index - 1].rate" />
+                <span class="time">{{ data.comments[index - 1].time }}</span>
+                <p>{{ data.comments[index - 1].content }}</p>
                 <div class="from">
-                  —— 非青
-                </div>
-              </li>
-              <li>
-                <rate :data="8.4" />
-                <p>
-                  关于复联的来历，还有神盾局局长独眼的来历，后一个简直是包年笑点（喵~）。女性主义不是建立在向男性证明的基础上，漫威很与时俱进了。看完最大感想：不愧是以厂名命名的英雄，觉醒后惊奇队长这战力可以单挑灭霸！！！
-                </p>
-                <div class="from">
-                  —— 同志亦凡人中文站
+                  {{ '—— ' + data.comments[index - 1].name }}
                 </div>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <div class="pictures">
-        <img
-          v-if="data.videos.length > 1"
-          :src="host + data.videos[1].coverKey"
-          alt="tupian1"
-        /><img :src="host + data.pictureKeys[0]" alt="tupian1" /><img
-          :src="host + data.pictureKeys[1]"
-          alt="tupian2"
-        /><img
-          v-if="data.videos.length <= 1"
-          :src="host + data.pictureKeys[2]"
-          alt="tupian3"
-        />
-      </div>
-      <div class="related">
-        <div class="section-title">
-          相同类型
+      <div class="sub-info">
+        <div class="play">
+          <i class="iconfont icon-bofang" @click="play"></i>
         </div>
-        <div>
-          <img :src="host + data.posterKey" alt="haibao" />
-          <img :src="host + data.posterKey" alt="haibao" />
-        </div>
-        <div>
-          <img :src="host + data.posterKey" alt="haibao" />
-          <img :src="host + data.posterKey" alt="haibao" />
+        <div class="picture-related">
+          <div class="pictures">
+            <img
+              v-if="data.videos.length > 1"
+              :src="host + data.videos[1].coverKey"
+              alt="tupian1"
+            /><img :src="host + data.pictureKeys[0]" alt="tupian1" /><img
+              :src="host + data.pictureKeys[1]"
+              alt="tupian2"
+            /><img
+              v-if="data.videos.length <= 1"
+              :src="host + data.pictureKeys[2]"
+              alt="tupian3"
+            />
+          </div>
+          <div class="related">
+            <div class="section-title">
+              相同类型
+            </div>
+            <div v-for="row in 2" :key="row">
+              <a v-for="col in 2" :key="col" :href="data.related[0].url">
+                <img
+                  :src="host + data.related[(row - 1) * 2 + col].posterKey"
+                  :alt="data.related[(row - 1) * 2 + col].name"
+                />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -124,12 +137,16 @@ export default {
   },
   data() {
     return {
-      host: 'http://ppbdn99ie.bkt.clouddn.com/',
+      host:
+        process.env.NODE_ENV === 'production'
+          ? 'http://pn9g0l6pg.bkt.clouddn.com/'
+          : 'http://ppopiaif8.bkt.clouddn.com/',
       dominant: '',
       dominantRGB: '',
       opposite: '',
       palette: '',
-      backgroundImg: ''
+      backgroundImg: '',
+      isPlaying: false
     }
   },
   watch: {
@@ -155,6 +172,11 @@ export default {
         })
       }
     }
+  },
+  methods: {
+    play() {
+      this.isPlaying = true
+    }
   }
 }
 </script>
@@ -165,7 +187,7 @@ export default {
   height: 100%;
   .bg-img {
     width: 100%;
-    height: 800px;
+    height: 100%;
     position: absolute;
     top: 0;
     z-index: -1;
@@ -179,7 +201,11 @@ export default {
       height: 100%;
       top: 0;
       left: 0;
-      box-shadow: 0 -80px 200px 150px #ffffff inset;
+    }
+    video {
+      background: #000;
+      height: 100%;
+      width: 100%;
     }
   }
   .content {
@@ -217,6 +243,12 @@ export default {
           padding: 5px 10px;
           border-radius: 6px;
         }
+        .director {
+          margin: 0 5px;
+        }
+        .category {
+          margin: 0 5px;
+        }
         .rate {
           .icon-redu {
             font-size: 25px;
@@ -247,6 +279,7 @@ export default {
               img,
               .cast-name {
                 width: 65px;
+                border-radius: 4px;
               }
             }
           }
@@ -263,6 +296,9 @@ export default {
               .rate {
                 margin-bottom: 10px;
               }
+              .time {
+                float: right;
+              }
               p {
                 max-height: 50px;
                 overflow: hidden;
@@ -275,29 +311,55 @@ export default {
         }
       }
     }
-    .pictures {
-      font-size: 0;
-      margin-right: 40px;
-      width: 260px;
-      flex: 0 0 auto;
-      img {
-        width: 120px;
-        &:first-child {
-          margin-bottom: 20px;
-          width: 100%;
-        }
-        &:last-child {
-          margin-left: 20px;
+
+    .sub-info {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .play {
+        text-align: right;
+        i {
+          font-size: 70px;
+          transition: all 0.2s ease;
+          opacity: 0.6;
+          cursor: pointer;
+          &:hover {
+            font-size: 75px;
+            opacity: 1;
+          }
         }
       }
-    }
-    .related {
-      flex: 0 0 auto;
-      font-size: 0;
-      margin: -5px;
-      img {
-        margin: 5px;
-        height: 160px;
+      .picture-related {
+        display: flex;
+        align-items: flex-end;
+        .pictures {
+          font-size: 0;
+          margin-right: 40px;
+          width: 260px;
+          flex: 0 0 auto;
+          img {
+            width: 120px;
+            border-radius: 4px;
+            &:first-child {
+              margin-bottom: 20px;
+              width: 100%;
+            }
+            &:last-child {
+              margin-left: 20px;
+            }
+          }
+        }
+        .related {
+          flex: 0 0 auto;
+          font-size: 0;
+          margin: -5px;
+          img {
+            margin: 5px;
+            height: 160px;
+            border-radius: 4px;
+          }
+        }
       }
     }
   }
