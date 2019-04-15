@@ -2,7 +2,7 @@ export default {
   qiniu: {
     base:
       process.env.NODE_ENV === 'production'
-        ? 'http://pn9g0l6pg.bkt.clouddn.com'
+        ? 'http://ppbdn99ie.bkt.clouddn.com'
         : 'http://ppopiaif8.bkt.clouddn.com',
     bucket:
       process.env.NODE_ENV === 'production'
