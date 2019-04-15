@@ -42,16 +42,16 @@ const handlePage = () => {
     // 预告片
     const trailer = it.find('.related-pic-video')
     if (trailer && trailer.length > 0) {
+      const video = {}
       const $t = $(trailer[0])
-      const link = $t.attr('href')
-      const cover = $t
-        .attr('style')
-        .replace('background-image:url(', '')
-        .replace(')', '')
-      media.videos.push({
-        cover,
-        link
-      })
+      video.link = $t.attr('href')
+      try {
+        video.cover = $t
+          .attr('style')
+          .replace('background-image:url(', '')
+          .replace(')', '')
+      } catch (error) {}
+      media.videos.push(video)
       continue
     }
 
@@ -75,28 +75,47 @@ const handlePage = () => {
     const comment = {}
 
     const $t = it.find('.comment-info')
-    comment.name = $t
-      .find('a')
-      .text()
-      .trim()
-    comment.time = $t
-      .find('.comment-time')
-      .text()
-      .trim()
-    comment.rate =
-      $t
-        .find('.rating')
-        .attr('class')
-        .split(' ')[0]
-        .slice(-2, -1) * 2 || 0
 
-    const $commit = it.find('.comment p')
-    const $full = $commit.find('.full')
-    if ($full.length > 0) {
-      comment.content = $full.text().trim()
-    } else {
-      const $short = $commit.find('.short')
-      comment.content = $short.text().trim()
+    try {
+      comment.name = $t
+        .find('a')
+        .text()
+        .trim()
+    } catch (error) {
+      comment.name = ''
+    }
+
+    try {
+      comment.time = $t
+        .find('.comment-time')
+        .text()
+        .trim()
+    } catch (error) {
+      comment.time = ''
+    }
+
+    try {
+      comment.rate =
+        $t
+          .find('.rating')
+          .attr('class')
+          .split(' ')[0]
+          .slice(-2, -1) * 2 || 0
+    } catch (error) {
+      comment.rate = 0
+    }
+
+    try {
+      const $commit = it.find('.comment p')
+      const $full = $commit.find('.full')
+      if ($full.length > 0) {
+        comment.content = $full.text().trim()
+      } else {
+        const $short = $commit.find('.short')
+        comment.content = $short.text().trim()
+      }
+    } catch (error) {
+      comment.content = ''
     }
 
     media.comments.push(comment)
@@ -113,12 +132,26 @@ const handlePage = () => {
     const it = $(element)
     const related = {}
 
-    related.url = it.find('a').attr('href')
-    related.poster = it.find('a img').attr('src')
-    related.name = it
-      .find('a img')
-      .attr('alt')
-      .trim()
+    try {
+      related.url = it.find('a').attr('href')
+    } catch (error) {
+      related.url = ''
+    }
+
+    try {
+      related.poster = it.find('a img').attr('src')
+    } catch (error) {
+      related.poster = ''
+    }
+
+    try {
+      related.name = it
+        .find('a img')
+        .attr('alt')
+        .trim()
+    } catch (error) {
+      related.name = ''
+    }
 
     media.related.push(related)
   }

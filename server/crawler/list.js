@@ -32,22 +32,26 @@ export default async page => {
     const links = []
 
     items.forEach(item => {
-      const it = $(item)
-      const doubanId = it[0].id
-      const title = it.data('title')
-      const rate = Number(it.data('score'))
-      const poster = it.find('img').attr('src')
-      const posterThumbnail = poster.replace('s_ratio', 'l_ratio')
-      links.push({
-        doubanId,
-        title,
-        rate,
-        poster,
-        posterThumbnail
-      })
+      try {
+        const it = $(item)
+        const doubanId = it[0].id
+        const title = it.data('title')
+        const rate = Number(it.data('score'))
+        const poster = it.find('img').attr('src')
+        const posterThumbnail = poster.replace('s_ratio', 'l_ratio')
+        links.push({
+          doubanId,
+          title,
+          rate,
+          poster,
+          posterThumbnail
+        })
+      } catch (error) {
+        logger.error('crawler list error', error)
+      }
     })
     return links
   })
 
-  return { result }
+  return { result: [result[18]] }
 }

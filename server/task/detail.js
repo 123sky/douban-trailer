@@ -62,12 +62,18 @@ export default async function() {
       const cast = movieData.subject.casts[index]
       const newCast = {
         name: cast.name,
-        avatar: cast.avatars.small
+        avatar: cast.avatars ? cast.avatars.small : ''
+      }
+
+      if (!newCast.avatar) {
+        newCast.avatarKey = ''
+        movie.casts.push(newCast)
+        continue
       }
 
       try {
         const path = `avatar/${nanoid()}.jpg`
-        const res = await qiniuApi.upload(cast.avatars.small, path)
+        const res = await qiniuApi.upload(newCast.avatar, path)
         if (res) {
           newCast.avatarKey = path
         } else {
@@ -84,7 +90,13 @@ export default async function() {
       const director = movieData.subject.directors[index]
       const newDirector = {
         name: director.name,
-        avatar: director.avatars.small
+        avatar: director.avatars ? director.avatars.small : ''
+      }
+
+      if (!newDirector.avatar) {
+        newDirector.avatarKey = ''
+        movie.casts.push(newDirector)
+        continue
       }
 
       try {
