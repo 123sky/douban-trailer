@@ -1,6 +1,6 @@
 import nanoid from 'nanoid'
 import { Movie, Video } from '../database/schema'
-import upload from '../lib/upload'
+import qiniuApi from '../lib/upload'
 import logger from '../lib/logger'
 import getMedia from '../crawler/media'
 
@@ -11,7 +11,7 @@ async function saveVideos({ _id, media }) {
 
     try {
       const path = `video/${nanoid()}.mp4`
-      const videoRes = await upload(params.url, path)
+      const videoRes = await qiniuApi.upload(params.url, path)
       if (videoRes) {
         params.videoKey = path
       } else {
@@ -23,7 +23,7 @@ async function saveVideos({ _id, media }) {
 
     try {
       const path = `video-cover/${nanoid()}.jpg`
-      const coverRes = await upload(params.cover, path)
+      const coverRes = await qiniuApi.upload(params.cover, path)
       if (coverRes) {
         params.coverKey = path
       } else {
@@ -51,7 +51,7 @@ async function uploadPictures(pictures) {
     const picture = pictures[index]
     try {
       const path = `picture/${nanoid()}.jpg`
-      const pictureRes = await upload(picture, path)
+      const pictureRes = await qiniuApi.upload(picture, path)
       if (pictureRes) {
         pictureKeys.push(path)
       }
@@ -66,7 +66,7 @@ async function saveRelated(related) {
   for (let index = 0; index < related.length; index++) {
     try {
       const path = `related/${nanoid()}.jpg`
-      const res = await upload(related[index].poster, path)
+      const res = await qiniuApi.upload(related[index].poster, path)
       if (res) {
         related[index].posterKey = path
       }

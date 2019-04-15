@@ -1,7 +1,7 @@
 import rp from 'request-promise-native'
 import nanoid from 'nanoid'
 import { Category, Movie } from '../database/schema'
-import upload from '../lib/upload'
+import qiniuApi from '../lib/upload'
 import logger from '../lib/logger'
 
 async function fetchMovie(item) {
@@ -67,7 +67,7 @@ export default async function() {
 
       try {
         const path = `avatar/${nanoid()}.jpg`
-        const res = await upload(cast.avatars.small, path)
+        const res = await qiniuApi.upload(cast.avatars.small, path)
         if (res) {
           newCast.avatarKey = path
         } else {
@@ -89,7 +89,7 @@ export default async function() {
 
       try {
         const path = `avatar/${nanoid()}.jpg`
-        const res = await upload(director.avatars.small, path)
+        const res = await qiniuApi.upload(director.avatars.small, path)
         if (res) {
           newDirector.avatarKey = path
         } else {

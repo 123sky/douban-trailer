@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     async submit() {
-      const res = await axios.post('/user/check', this.form)
+      const res = await axios.post('/user/login', this.form)
       if (res.code === 1) {
         const res = await axios.put('/update/')
         this.$emit('close')

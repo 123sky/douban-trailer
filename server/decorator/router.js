@@ -78,7 +78,6 @@ export const Required = paramsObj =>
   })
 
 export const Auth = convert(async (ctx, next) => {
-  console.log(ctx.session)
   if (!ctx.session.user) {
     return (ctx.body = {
       success: false,

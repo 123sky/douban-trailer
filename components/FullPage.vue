@@ -1,13 +1,13 @@
 <template>
   <div class="full-page-wrap">
-    <div class="operation">
+    <!-- <div class="operation">
       <div class="last" @click="last">
         <i class="iconfont icon-up" />
       </div>
       <div class="next" @click="next">
         <i class="iconfont icon-up" />
       </div>
-    </div>
+    </div> -->
 
     <div class="full-page" :style="style">
       <div
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import util from '@/lib/util.js'
 export default {
   props: {
     value: {
@@ -61,7 +62,17 @@ export default {
       }
     }
   },
+  mounted() {
+    if (navigator.userAgent.toLowerCase().indexOf('firefox') === -1) {
+      document.addEventListener('mousewheel', this.handleMouseWheel())
+    } else {
+      document.addEventListener('DOMMouseScroll', this.handleMouseWheel())
+    }
+  },
   methods: {
+    handleMouseWheel() {
+      return util.throttle(this.scrollMouse, this, 1000)
+    },
     last() {
       this.currentIndex = this.currentIndex - 1 < 0 ? 0 : this.currentIndex - 1
       this.$emit('input', this.currentIndex)
@@ -72,6 +83,27 @@ export default {
           ? this.currentIndex + 1
           : this.currentIndex
       this.$emit('input', this.currentIndex)
+    },
+    // 鼠标滚动逻辑（全屏滚动关键逻辑）
+    scrollMouse(event) {
+      const delta = util.getWheelDelta(event)
+      // delta < 0，鼠标往前滚动，页面向下滚动
+      if (delta < 0) {
+        this.next()
+      } else {
+        this.last()
+      }
+    },
+    // 触屏事件
+    touchEnd(event) {
+      const endY = event.changedTouches[0].pageY
+      if (endY - this.startY < 0) {
+        // 手指向上滑动，对应页面向下滚动
+        this.next()
+      } else {
+        // 手指向下滑动，对应页面向上滚动
+        this.last()
+      }
     }
   }
 }

@@ -49,5 +49,5 @@ export default async page => {
     return links
   })
 
-  return { result: [result[0]] }
+  return { result: [result[6]] }
 }

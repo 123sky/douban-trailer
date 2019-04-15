@@ -6,117 +6,123 @@
     <div
       class="bg-img"
       :style="{ 'background-image': `url(${backgroundImg})` }"
-    >
-      <video v-if="isPlaying" controls>
-        <source
-          v-for="video in data.videos"
-          :key="video._id"
-          :src="host + video.videoKey"
-        />
-      </video>
-    </div>
-    <div v-show="!isPlaying" class="content">
-      <div class="info">
-        <div class="primary">
-          <div class="title">
-            {{ data.title }}
+    />
+    <transition name="fade-transform" mode="out-in">
+      <div v-if="isPlaying" key="video" class="video">
+        <div class="back" @click="back">
+          <i class="iconfont icon-fanhui"></i>
+        </div>
+        <video controls autoplay>
+          <source
+            v-for="video in data.videos"
+            :key="video._id"
+            :src="host + video.videoKey"
+          />
+        </video>
+      </div>
+      <div v-else key="content" class="content">
+        <div class="info">
+          <div class="primary">
+            <div class="title">
+              {{ data.title }}
+            </div>
+            <div class="line summary">
+              {{ data.summary }}
+            </div>
+            <div class="line">
+              <span class="runtime" :style="{ 'background-color': palette }">
+                {{ data.duration[0] }}
+              </span>
+              <span
+                v-for="(director, index) in data.directors"
+                :key="index"
+                class="director"
+              >
+                {{ director.name }}
+              </span>
+            </div>
+            <div class="line">
+              <span>{{ data.year }}</span>
+              <span
+                v-for="category in data.category"
+                :key="category._id"
+                class="category"
+              >
+                {{ category.name }}
+              </span>
+            </div>
+            <div class="line rate">
+              <i :style="{ color: palette }" class="iconfont icon-redu" />
+              <span class="num" :style="{ color: palette }">{{
+                data.rate.toFixed(1)
+              }}</span>
+              <span class="total-num">/ 10</span>
+            </div>
           </div>
-          <div class="line summary">
-            {{ data.summary }}
-          </div>
-          <div class="line">
-            <span class="runtime" :style="{ 'background-color': palette }">
-              {{ data.duration[0] }}
-            </span>
-            <span
-              v-for="(director, index) in data.directors"
-              :key="index"
-              class="director"
-            >
-              {{ director.name }}
-            </span>
-          </div>
-          <div class="line">
-            <span>{{ data.year }}</span>
-            <span
-              v-for="category in data.category"
-              :key="category._id"
-              class="category"
-            >
-              {{ category.name }}
-            </span>
-          </div>
-          <div class="line rate">
-            <i :style="{ color: palette }" class="iconfont icon-redu" />
-            <span class="num" :style="{ color: palette }">{{
-              data.rate.toFixed(1)
-            }}</span>
-            <span class="total-num">/ 10</span>
+          <div class="cast-reviews">
+            <div class="cast">
+              <div class="section-title">
+                演职人员
+              </div>
+              <ul>
+                <li v-for="cast in data.casts" :key="cast._id">
+                  <img :src="host + cast.avatarKey" alt="cast.name" />
+                  <div class="cast-name">
+                    {{ cast.name }}
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="reviews">
+              <ul>
+                <li v-for="index in 2" :key="index">
+                  <rate :data="data.comments[index - 1].rate" />
+                  <span class="time">{{ data.comments[index - 1].time }}</span>
+                  <p>{{ data.comments[index - 1].content }}</p>
+                  <div class="from">
+                    {{ '—— ' + data.comments[index - 1].name }}
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-        <div class="cast-reviews">
-          <div class="cast">
-            <div class="section-title">
-              演职人员
-            </div>
-            <ul>
-              <li v-for="cast in data.casts" :key="cast._id">
-                <img :src="host + cast.avatarKey" alt="cast.name" />
-                <div class="cast-name">
-                  {{ cast.name }}
-                </div>
-              </li>
-            </ul>
+        <div class="sub-info">
+          <div class="play">
+            <i class="iconfont icon-bofang" @click="play"></i>
           </div>
-          <div class="reviews">
-            <ul>
-              <li v-for="index in 2" :key="index">
-                <rate :data="data.comments[index - 1].rate" />
-                <span class="time">{{ data.comments[index - 1].time }}</span>
-                <p>{{ data.comments[index - 1].content }}</p>
-                <div class="from">
-                  {{ '—— ' + data.comments[index - 1].name }}
-                </div>
-              </li>
-            </ul>
+          <div class="picture-related">
+            <div class="pictures">
+              <img
+                v-if="data.videos.length > 1"
+                :src="host + data.videos[1].coverKey"
+                alt="tupian1"
+              /><img :src="host + data.pictureKeys[0]" alt="tupian1" /><img
+                :src="host + data.pictureKeys[1]"
+                alt="tupian2"
+              /><img
+                v-if="data.videos.length <= 1"
+                :src="host + data.pictureKeys[2]"
+                alt="tupian3"
+              />
+            </div>
+            <div class="related">
+              <div class="section-title">
+                相同类型
+              </div>
+              <div v-for="row in 2" :key="row">
+                <a v-for="col in 2" :key="col" :href="data.related[0].url">
+                  <img
+                    :src="host + data.related[(row - 1) * 2 + col].posterKey"
+                    :alt="data.related[(row - 1) * 2 + col].name"
+                  />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="sub-info">
-        <div class="play">
-          <i class="iconfont icon-bofang" @click="play"></i>
-        </div>
-        <div class="picture-related">
-          <div class="pictures">
-            <img
-              v-if="data.videos.length > 1"
-              :src="host + data.videos[1].coverKey"
-              alt="tupian1"
-            /><img :src="host + data.pictureKeys[0]" alt="tupian1" /><img
-              :src="host + data.pictureKeys[1]"
-              alt="tupian2"
-            /><img
-              v-if="data.videos.length <= 1"
-              :src="host + data.pictureKeys[2]"
-              alt="tupian3"
-            />
-          </div>
-          <div class="related">
-            <div class="section-title">
-              相同类型
-            </div>
-            <div v-for="row in 2" :key="row">
-              <a v-for="col in 2" :key="col" :href="data.related[0].url">
-                <img
-                  :src="host + data.related[(row - 1) * 2 + col].posterKey"
-                  :alt="data.related[(row - 1) * 2 + col].name"
-                />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -176,6 +182,9 @@ export default {
   methods: {
     play() {
       this.isPlaying = true
+    },
+    back() {
+      this.isPlaying = false
     }
   }
 }
@@ -202,8 +211,29 @@ export default {
       top: 0;
       left: 0;
     }
+  }
+  .video {
+    background: #000;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    .back {
+      position: absolute;
+      top: 40px;
+      left: 50px;
+      color: #fff;
+      width: 60px;
+      height: 60px;
+      padding: 10px;
+      border-radius: 50%;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      i {
+        font-size: 40px;
+      }
+    }
     video {
-      background: #000;
       height: 100%;
       width: 100%;
     }
@@ -369,5 +399,18 @@ export default {
   margin-bottom: 15px;
   font-size: 25px;
   font-weight: bold;
+}
+
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+  transition: all 0.5s;
+}
+
+.fade-transform-enter {
+  opacity: 0;
+}
+
+.left-fade-transform-leave-to {
+  opacity: 0;
 }
 </style>
